@@ -7,6 +7,10 @@ app on your phone and still have access to everything?
 
 If so, maybe _Mail Importer for Gmail_ is for you!
 
+If you are trying to bulk import mbox format files to Google Apps for Work,
+you should probably look at
+[import-mailbox-to-gmail](https://github.com/google/import-mailbox-to-gmail).
+
 **DISCLAIMER**: This is not an official Google product.
 
 ## What does it do?
