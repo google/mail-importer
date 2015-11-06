@@ -9,3 +9,6 @@
 
 # Client Secrets
 /src/main/resources/client_secret*.json
+
+# Maven
+pom.xml.versionsBackup

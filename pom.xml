@@ -22,7 +22,11 @@
 
     <groupId>to.lean.tools</groupId>
     <artifactId>mail-importer</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.0-SNAPSHOT</version>
+
+    <scm>
+        <connection>scm:git:git@github.com:iflan/mail-importer.git</connection>
+    </scm>
 
     <dependencies>
         <dependency>
@@ -142,6 +146,13 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>1.9.4</version>
+                <configuration>
+                    <tag>${project.artifactId}-${project.version}</tag>
+                </configuration>
             </plugin>
         </plugins>
     </build>
