@@ -214,3 +214,8 @@ promises to make this better. Dagger also promises to be more debuggable.
 ### Convert to SLF4J
 
 Maybe it would be good to convert to SLF4J?
+
+### Add support for PST and OST files
+
+Use a library such as [java-libpst](https://github.com/rjohnsondev/java-libpst)
+to allow importing from PST and OST files without converting them first.
