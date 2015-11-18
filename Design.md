@@ -214,3 +214,9 @@ promises to make this better. Dagger also promises to be more debuggable.
 ### Convert to SLF4J
 
 Maybe it would be good to convert to SLF4J?
+
+### Import Outlook PST/OST format
+
+MS open sourced the file formats around five years ago, so allowing imports
+from this widespread email client would be a nice feature.
+
