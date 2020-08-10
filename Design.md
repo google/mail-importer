@@ -51,7 +51,7 @@ different local folder so that it can be retried later.
 
 ### Reading Mailboxes
 
-The Mail Importer uses [Mstor](http://mstor.sourceforge.net/) as a **JavaMail**
+The Mail Importer uses [Mstor](https://github.com/benfortuna/mstor) as a **JavaMail**
 implementation to read local Thunderbird mailboxes. Mstor can also read regular
 mbox files, but this has not been tested.
 
