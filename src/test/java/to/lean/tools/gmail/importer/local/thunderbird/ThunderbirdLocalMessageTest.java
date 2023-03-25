@@ -16,9 +16,8 @@
 
 package to.lean.tools.gmail.importer.local.thunderbird;
 
-import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
@@ -67,7 +66,7 @@ public class ThunderbirdLocalMessageTest {
   public void testGetMessageId_normal() throws Exception {
     when(message.getHeader("Message-ID")).thenReturn(new String[] {"<XYZ@pdq>"});
 
-    assertThat(localMailMessage.getMessageId()).named("messageId").isEqualTo("<XYZ@pdq>");
+    assertWithMessage("messageId").that(localMailMessage.getMessageId()).isEqualTo("<XYZ@pdq>");
   }
 
   @Test
@@ -98,7 +97,7 @@ public class ThunderbirdLocalMessageTest {
   public void testGetFromHeader_normal() throws Exception {
     when(message.getHeader("From")).thenReturn(new String[] {"<XYZ@pdq>"});
 
-    assertThat(localMailMessage.getFromHeader()).named("from header").isEqualTo("<XYZ@pdq>");
+    assertWithMessage("from header").that(localMailMessage.getFromHeader()).isEqualTo("<XYZ@pdq>");
   }
 
   @Test
@@ -127,37 +126,37 @@ public class ThunderbirdLocalMessageTest {
 
   @Test
   public void testGetFolders() throws Exception {
-    assertThat(localMailMessage.getFolders()).named("folders").containsExactly("*folder*");
+    assertWithMessage("folders").that(localMailMessage.getFolders()).containsExactly("*folder*");
   }
 
   @Test
   public void testGetRawContent() throws Exception {
-    assertThat(localMailMessage.getRawContent())
-        .named("raw content")
+    assertWithMessage("raw content")
+        .that(localMailMessage.getRawContent())
         .isEqualTo("BODY".getBytes(Charsets.UTF_8));
   }
 
   @Test
   public void testIsUnread_true() throws Exception {
     when(message.getHeader("X-Mozilla-Status")).thenReturn(new String[] {"00000000"});
-    assertThat(localMailMessage.isUnread()).named("is unread").isEqualTo(true);
+    assertWithMessage("is unread").that(localMailMessage.isUnread()).isEqualTo(true);
   }
 
   @Test
   public void testIsUnread_false() throws Exception {
     when(message.getHeader("X-Mozilla-Status")).thenReturn(new String[] {"00000001"});
-    assertThat(localMailMessage.isUnread()).named("is unread").isEqualTo(false);
+    assertWithMessage("is unread").that(localMailMessage.isUnread()).isEqualTo(false);
   }
 
   @Test
   public void testIsStarred_true() throws Exception {
     when(message.getHeader("X-Mozilla-Status")).thenReturn(new String[] {"00000004"});
-    assertThat(localMailMessage.isStarred()).named("is starred").isEqualTo(true);
+    assertWithMessage("is starred").that(localMailMessage.isStarred()).isEqualTo(true);
   }
 
   @Test
   public void testIsStarred_false() throws Exception {
     when(message.getHeader("X-Mozilla-Status")).thenReturn(new String[] {"00000000"});
-    assertThat(localMailMessage.isStarred()).named("is starred").isEqualTo(false);
+    assertWithMessage("is starred").that(localMailMessage.isStarred()).isEqualTo(false);
   }
 }

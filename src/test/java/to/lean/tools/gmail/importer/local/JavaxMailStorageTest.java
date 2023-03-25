@@ -27,7 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.internal.matchers.GreaterThan;
@@ -120,9 +120,9 @@ public class JavaxMailStorageTest {
     when(javaxMailFolder.getType()).thenReturn(Folder.HOLDS_FOLDERS | Folder.HOLDS_MESSAGES);
 
     when(javaxMailFolder.getMessageCount()).thenReturn(numMessages);
-    when(javaxMailFolder.getMessage(Matchers.intThat(new LessOrEqual<>(numMessages))))
+    when(javaxMailFolder.getMessage(ArgumentMatchers.intThat(new LessOrEqual<>(numMessages))))
         .thenReturn(mock(JavaxMailMessage.class));
-    when(javaxMailFolder.getMessage(Matchers.intThat(new GreaterThan<>(numMessages))))
+    when(javaxMailFolder.getMessage(ArgumentMatchers.intThat(new GreaterThan<>(numMessages))))
         .thenThrow(new RuntimeMessagingException(new MessagingException("crap")));
 
     when(javaxMailFolder.list()).thenReturn(folders);

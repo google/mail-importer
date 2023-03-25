@@ -20,7 +20,6 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.auth.oauth2.GoogleOAuthConstants;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -44,6 +43,8 @@ import javax.inject.Provider;
 
 /** Encapsulates the authorization and authentication flow. */
 class Authorizer implements Provider<Credential> {
+  private static final String REDIRECT_URI = "http://localhost:8080/oauth2callback";
+
   private HttpTransport httpTransport;
   private JsonFactory jsonFactory;
   private User user;
@@ -78,10 +79,8 @@ class Authorizer implements Provider<Credential> {
 
       // If we don't, prompt them to get one.
       if (credential == null) {
-        String url =
-            flow.newAuthorizationUrl()
-                .setRedirectUri(GoogleOAuthConstants.OOB_REDIRECT_URI)
-                .build();
+
+        String url = flow.newAuthorizationUrl().setRedirectUri(REDIRECT_URI).build();
         System.out.println(
             "Please open the following URL in your browser then "
                 + "type the authorization code:\n"
@@ -95,9 +94,7 @@ class Authorizer implements Provider<Credential> {
 
         // Generate Credential using retrieved code.
         GoogleTokenResponse response =
-            flow.newTokenRequest(code)
-                .setRedirectUri(GoogleOAuthConstants.OOB_REDIRECT_URI)
-                .execute();
+            flow.newTokenRequest(code).setRedirectUri(REDIRECT_URI).execute();
 
         credential = flow.createAndStoreCredential(response, user.getEmailAddress());
       }

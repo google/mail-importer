@@ -50,10 +50,10 @@ public class CommandLineArgumentsTest {
 
     CommandLineArguments commandLineArguments = parse(args);
 
-    assertThat(commandLineArguments.mailboxFileName)
-        .named("mailbox")
+    assertWithMessage("mailbox")
+        .that(commandLineArguments.mailboxFileName)
         .isEqualTo("/no/such/directory");
-    assertThat(commandLineArguments.user).named("user").isEqualTo("me");
+    assertWithMessage("user").that(commandLineArguments.user).isEqualTo("me");
   }
 
   @Test
@@ -61,10 +61,10 @@ public class CommandLineArgumentsTest {
     String[] args = {"--mailbox=/no/such/directory", "--user=foobar"};
 
     CommandLineArguments commandLineArguments = parse(args);
-    assertThat(commandLineArguments.mailboxFileName)
-        .named("mailbox")
+    assertWithMessage("mailbox")
+        .that(commandLineArguments.mailboxFileName)
         .isEqualTo("/no/such/directory");
-    assertThat(commandLineArguments.user).named("user").isEqualTo("foobar");
+    assertWithMessage("user").that(commandLineArguments.user).isEqualTo("foobar");
     assertThat(commandLineArguments.maxMessages).isNull();
   }
 

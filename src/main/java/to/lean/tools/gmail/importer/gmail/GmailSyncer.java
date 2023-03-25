@@ -17,8 +17,8 @@
 package to.lean.tools.gmail.importer.gmail;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.api.services.gmail.model.Message;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Multimap;
 import java.io.IOException;
 import java.util.List;

@@ -51,20 +51,20 @@ public class XMozillaStatusTest {
   @Test
   public void testIsRead() throws Exception {
     XMozillaStatus status = statusForHeader("00000001");
-    assertThat(status.isRead()).named("isRead").isTrue();
+    assertWithMessage("isRead").that(status.isRead()).isTrue();
   }
 
   @Test
   public void testIsMarked() throws Exception {
     XMozillaStatus status = statusForHeader("00000004");
-    assertThat(status.isMarked()).named("isMarked").isTrue();
+    assertWithMessage("isMarked").that(status.isMarked()).isTrue();
   }
 
   @Test
   public void testIsMarkedAndRead() throws Exception {
     XMozillaStatus status = statusForHeader("00000005");
-    assertThat(status.isRead()).named("isRead").isTrue();
-    assertThat(status.isRead()).named("isMarked").isTrue();
+    assertWithMessage("isRead").that(status.isRead()).isTrue();
+    assertWithMessage("isMarked").that(status.isRead()).isTrue();
   }
 
   private XMozillaStatus statusForHeader(String... headers) {

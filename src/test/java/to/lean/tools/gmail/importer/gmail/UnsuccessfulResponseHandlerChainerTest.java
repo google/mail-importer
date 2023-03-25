@@ -16,8 +16,7 @@
 
 package to.lean.tools.gmail.importer.gmail;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -61,8 +60,7 @@ public class UnsuccessfulResponseHandlerChainerTest {
 
     chainer.chain(handler).handleResponse(httpRequest, httpResponse, SUPPORTS_RETRY);
 
-    verify(handler)
-        .handleResponse(any(HttpRequest.class), any(HttpResponse.class), any(Boolean.TYPE));
+    verify(handler).handleResponse(eq(httpRequest), eq(httpResponse), any(Boolean.TYPE));
   }
 
   @Test
@@ -72,11 +70,9 @@ public class UnsuccessfulResponseHandlerChainerTest {
 
     chainer.chain(handler1, handler2).handleResponse(httpRequest, httpResponse, SUPPORTS_RETRY);
 
-    verify(handler1)
-        .handleResponse(any(HttpRequest.class), any(HttpResponse.class), any(Boolean.TYPE));
+    verify(handler1).handleResponse(eq(httpRequest), eq(httpResponse), any(Boolean.TYPE));
 
-    verify(handler2)
-        .handleResponse(any(HttpRequest.class), any(HttpResponse.class), any(Boolean.TYPE));
+    verify(handler2).handleResponse(eq(httpRequest), eq(httpResponse), any(Boolean.TYPE));
   }
 
   @Test
@@ -84,15 +80,12 @@ public class UnsuccessfulResponseHandlerChainerTest {
     HttpUnsuccessfulResponseHandler handler1 = mock(HttpUnsuccessfulResponseHandler.class);
     HttpUnsuccessfulResponseHandler handler2 = mock(HttpUnsuccessfulResponseHandler.class);
 
-    when(handler1.handleResponse(any(HttpRequest.class), any(HttpResponse.class), anyBoolean()))
-        .thenReturn(true);
+    when(handler1.handleResponse(eq(httpRequest), eq(httpResponse), anyBoolean())).thenReturn(true);
 
     chainer.chain(handler1, handler2).handleResponse(httpRequest, httpResponse, SUPPORTS_RETRY);
 
-    verify(handler1)
-        .handleResponse(any(HttpRequest.class), any(HttpResponse.class), any(Boolean.TYPE));
+    verify(handler1).handleResponse(eq(httpRequest), eq(httpResponse), any(Boolean.TYPE));
 
-    verify(handler2, never())
-        .handleResponse(any(HttpRequest.class), any(HttpResponse.class), any(Boolean.TYPE));
+    verify(handler2, never()).handleResponse(eq(httpRequest), eq(httpResponse), isA(Boolean.TYPE));
   }
 }
