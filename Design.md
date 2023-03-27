@@ -7,11 +7,11 @@ Gmail API v1. Currently, Mozilla Thunderbird is the only supported source, but
 it should be relatively easy to extend support to any other local, mbox-based
 source. (And, in fact, it may just work out of the box.)
 
-The Mail Importer tries to be efficient by not uploading the message content
-for messages that already exist in Gmail. This makes it easy for the import
-process to be restarted if there is an error.
+The Mail Importer tries to be efficient by not uploading the message content for
+messages that already exist in Gmail. This makes it easy for the import process
+to be restarted if there is an error.
 
-__Mail Importer__ requires Java 8 or later.
+**Mail Importer** requires Java 8 or later.
 
 ## General Design and Assumptions
 
@@ -27,15 +27,15 @@ message is present, whether it is starred or read, and the raw message content.
 The `Importer` class iterates through the messages returned by the source in
 batches. For each batch, it queries the Gmail API for all of the RFC 822 message
 IDs. For each message that is missing, it uploads the raw message data. Then,
-for each message, it checks the Gmail labels that are on the message and
-adjusts the labels if necessary.
+for each message, it checks the Gmail labels that are on the message and adjusts
+the labels if necessary.
 
 The Mail Importer assumes that all messages with the same RFC 822 message ID in
 the local store _are the same message_. This is very important for several
 reasons, including:
 
-* not requiring every message to be re-uploaded if an import is interrupted;
-* ensuring that messages present in more than one local folder are labelled
+- not requiring every message to be re-uploaded if an import is interrupted;
+- ensuring that messages present in more than one local folder are labelled
   correctly in Gmail.
 
 However, care has also been taken to not assume that there won't be multiple
@@ -59,9 +59,9 @@ mbox files, but this has not been tested.
 
 On top of Mstor, the Mail Importer's `ThunderbirdLocalMessage` class adds
 support for interpreting the value of the `X-Mozilla-Status` header.
-Specifically, it retrieves whether the user has read the message and whether
-the message has been _flagged_. Flagged messages are converted to _starred_
-messages in Gmail.
+Specifically, it retrieves whether the user has read the message and whether the
+message has been _flagged_. Flagged messages are converted to _starred_ messages
+in Gmail.
 
 The class `ThunderbirdMailStorage` also filters the folders returned by the API
 to only those that are real folders. For example, Thunderbird snapshots that
@@ -70,11 +70,11 @@ contain a `@` are ignored.
 #### Dealing with `MessagingException`s
 
 Almost every method in the JavaMail API throws a MessagingException if an error
-occurs. This plethora of checked exceptions muddies the code, especially
-because there is almost no way to recover from these exceptions. Here's an
-example from the API:
+occurs. This plethora of checked exceptions muddies the code, especially because
+there is almost no way to recover from these exceptions. Here's an example from
+the API:
 
-````java
+```java
     /**
      * Return a URLName representing this folder.  The returned URLName
      * does <em>not</em> include the password used to access the store.
@@ -84,7 +84,7 @@ example from the API:
      * @since	JavaMail 1.1
      */
     public URLName getURLName() throws MessagingException {...}
-````
+```
 
 There is no clue as to why this method might throw a `MessagingException` nor
 what those exceptions might mean. Digging through the code reveals that this is
@@ -106,11 +106,11 @@ ensures that we don't have to modify the original mail store.
 
 Some error strategies can also be layered. For example, `Retry` will retry
 exactly once. So the compound error strategy `Retry,Retry,SaveForLater` will
-cause the upload to be retried twice and then the message will be saved to a
-new folder and processing will continue.
+cause the upload to be retried twice and then the message will be saved to a new
+folder and processing will continue.
 
-Note that error strategies are designed to help when uploads to Gmail fail;
-when the local store can't be read, there's not a lot that Mail Importer can do.
+Note that error strategies are designed to help when uploads to Gmail fail; when
+the local store can't be read, there's not a lot that Mail Importer can do.
 
 ### Guice Usage
 
@@ -121,8 +121,8 @@ around a giant `CommandLineArguments` instance that holds all the flags. (See
 the Future Improvements section below.)
 
 Each module should bind providers that extract the individual parts of the
-`CommandLineArguments` object that are necessary and those should be injected
-in the module's classes.
+`CommandLineArguments` object that are necessary and those should be injected in
+the module's classes.
 
 ### Logging
 
@@ -133,16 +133,16 @@ same.
 
 Log levels are defined as:
 
- * finest: Log statements in tight loops that are only used for detailed
-   debugging. These should rarely be enabled.
- * fine: Log statements for tracing execution to figure out what code paths
-   are being executed. These should only seldom be enabled.
- * info: Log statement marking the progress of a task. These can be enabled
-   frequently.
- * warning: Unexpected or erroneous behavior where the application can
-   reasonably continue. These should always be enabled.
- * severe: Unexpected or erroneous behavior that causes the application to
-   stop functioning. These should always be enabled.
+- finest: Log statements in tight loops that are only used for detailed
+  debugging. These should rarely be enabled.
+- fine: Log statements for tracing execution to figure out what code paths are
+  being executed. These should only seldom be enabled.
+- info: Log statement marking the progress of a task. These can be enabled
+  frequently.
+- warning: Unexpected or erroneous behavior where the application can reasonably
+  continue. These should always be enabled.
+- severe: Unexpected or erroneous behavior that causes the application to stop
+  functioning. These should always be enabled.
 
 ## Future Improvements
 
@@ -171,8 +171,8 @@ We could add a flag that forces all messages to be uploaded. Gmail _should_
 de-dupe the messages if they are truly equivalent.
 
 Note that Gmail has two modes of uploading messages: _insert_ and _upload_.
-Messages uploaded through the _insert_ API do not have de-duping and other
-Gmail processing logic run on them. Generally, using _upload_ is better.
+Messages uploaded through the _insert_ API do not have de-duping and other Gmail
+processing logic run on them. Generally, using _upload_ is better.
 
 ### Closing `Folder`s
 
@@ -186,8 +186,8 @@ feedback about whether messages in a given folder are still being processed or
 anything like that.
 
 This may not be as bad as it sounds as, in theory, the folder should be garbage
-collected once it is unreferenced. This will also free Mstor's message cache
-for the folder.
+collected once it is unreferenced. This will also free Mstor's message cache for
+the folder.
 
 ### Modularize Command Line Argument Processing
 
@@ -201,9 +201,8 @@ it's basically a project in itself.
 We currently assume that Mail Importer is the only user of the account in
 question and that things like labels and message state will stay constant
 throughout the run. It would be better to actually query the history or get
-changes pushed down to Mail Importer while it is running so that it can keep
-its internal state in sync with the server. This will probably require a
-redesign.
+changes pushed down to Mail Importer while it is running so that it can keep its
+internal state in sync with the server. This will probably require a redesign.
 
 ### Convert from Guice to Dagger 2.0
 
@@ -217,6 +216,5 @@ Maybe it would be good to convert to SLF4J?
 
 ### Import Outlook PST/OST format
 
-MS open sourced the file formats around five years ago, so allowing imports
-from this widespread email client would be a nice feature.
-
+MS open sourced the file formats around five years ago, so allowing imports from
+this widespread email client would be a nice feature.
