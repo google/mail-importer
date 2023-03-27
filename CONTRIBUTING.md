@@ -42,7 +42,8 @@ in more detail.
 
 For code style, we follow the
 [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).
-We currently use an 80-column limit.
+We currently use a 100-column limit. We prefer to use `google-java-format` to
+format our code.
 
 We use Java 8 including all of the new functional fanciness. However, we try to
 be reasonable and use it only when it actually makes things simpler and clearer.
