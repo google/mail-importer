@@ -25,13 +25,10 @@ import com.google.api.client.util.BackOff;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import javax.inject.Singleton;
 import to.lean.tools.gmail.importer.CommandLineArguments;
 
-import javax.inject.Singleton;
-
-/**
- * Module that provides the Gmail service.
- */
+/** Module that provides the Gmail service. */
 public class GmailServiceModule extends AbstractModule {
   static final String APP_NAME = "Mail Importer for Gmail";
 
@@ -40,37 +37,38 @@ public class GmailServiceModule extends AbstractModule {
     requireBinding(CommandLineArguments.class);
 
     bind(GmailService.class).in(Singleton.class);
-    bind(Credential.class)
-        .toProvider(Authorizer.class)
-        .in(Singleton.class);
+    bind(Credential.class).toProvider(Authorizer.class).in(Singleton.class);
 
     bind(ExponentialBackOff.Builder.class)
-        .toInstance(new ExponentialBackOff.Builder()
-            .setInitialIntervalMillis(1000)
-            .setMultiplier(2)
-            .setRandomizationFactor(0.5)
-            .setMaxIntervalMillis(60000)
-            .setMaxElapsedTimeMillis(300000));
+        .toInstance(
+            new ExponentialBackOff.Builder()
+                .setInitialIntervalMillis(1000)
+                .setMultiplier(2)
+                .setRandomizationFactor(0.5)
+                .setMaxIntervalMillis(60000)
+                .setMaxElapsedTimeMillis(300000));
   }
 
-  @Provides @Singleton
+  @Provides
+  @Singleton
   User provideUser(CommandLineArguments commandLineArguments) {
     return User.create(commandLineArguments.user);
   }
 
-  @Provides @Singleton
+  @Provides
+  @Singleton
   HttpTransport provideHttpTransport() {
     return new NetHttpTransport();
   }
 
-  @Provides @Singleton
+  @Provides
+  @Singleton
   JsonFactory provideJsonFactory() {
     return new JacksonFactory();
   }
 
   @Provides
-  BackOff provideExponentialBackoff(
-      ExponentialBackOff.Builder builder) {
+  BackOff provideExponentialBackoff(ExponentialBackOff.Builder builder) {
     return builder.build();
   }
 }

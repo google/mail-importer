@@ -18,20 +18,18 @@ package to.lean.tools.gmail.importer.local.thunderbird;
 
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableList;
-import to.lean.tools.gmail.importer.local.JavaxMailMessage;
-import to.lean.tools.gmail.importer.local.LocalMessage;
-
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import to.lean.tools.gmail.importer.local.JavaxMailMessage;
+import to.lean.tools.gmail.importer.local.LocalMessage;
 
 /**
- * Thunderbird-specific local message that correctly decodes the
- * {@code X-Mozilla-Status} headers.
+ * Thunderbird-specific local message that correctly decodes the {@code X-Mozilla-Status} headers.
  */
 @NotThreadSafe
 class ThunderbirdLocalMessage implements LocalMessage {
@@ -54,23 +52,22 @@ class ThunderbirdLocalMessage implements LocalMessage {
   @Override
   public String getMessageId() {
     String[] messageId = message.getHeader("Message-ID");
-    Verify.verify(messageId.length == 1,
-        "Expected 1 message id, got: %s", Arrays.toString(messageId));
+    Verify.verify(
+        messageId.length == 1, "Expected 1 message id, got: %s", Arrays.toString(messageId));
     return messageId[0];
   }
 
   @Override
   public String getFromHeader() {
     String[] fromHeader = message.getHeader("From");
-    Verify.verify(fromHeader.length == 1,
-        "Expected 1 From header, got: %s", Arrays.toString(fromHeader));
+    Verify.verify(
+        fromHeader.length == 1, "Expected 1 From header, got: %s", Arrays.toString(fromHeader));
     return fromHeader[0];
   }
 
   @Override
   public List<String> getFolders() {
-    return
-        ImmutableList.of(relativize.apply(message.getFolder().getFullName()));
+    return ImmutableList.of(relativize.apply(message.getFolder().getFullName()));
   }
 
   @Override

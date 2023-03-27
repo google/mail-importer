@@ -23,13 +23,10 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.BackOff;
 import com.google.api.services.gmail.Gmail;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-/**
- * Constructs a {@link Gmail} instance that is ready for use.
- */
+/** Constructs a {@link Gmail} instance that is ready for use. */
 public class GmailService {
 
   private final Credential credential;
@@ -54,15 +51,14 @@ public class GmailService {
     HttpRequestInitializer httpRequestInitializer =
         request -> {
           credential.initialize(request);
-          new UnsuccessfulResponseHandlerChainer().chain(
-              request.getUnsuccessfulResponseHandler(),
-              new HttpBackOffUnsuccessfulResponseHandler(
-                  backOffProvider.get()));
+          new UnsuccessfulResponseHandlerChainer()
+              .chain(
+                  request.getUnsuccessfulResponseHandler(),
+                  new HttpBackOffUnsuccessfulResponseHandler(backOffProvider.get()));
         };
 
     return new Gmail.Builder(httpTransport, jsonFactory, httpRequestInitializer)
         .setApplicationName(GmailServiceModule.APP_NAME)
         .build();
   }
-
 }

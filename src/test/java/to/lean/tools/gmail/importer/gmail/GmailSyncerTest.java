@@ -16,24 +16,22 @@
 
 package to.lean.tools.gmail.importer.gmail;
 
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.MultimapBuilder;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import to.lean.tools.gmail.importer.local.LocalMessage;
-
-import java.util.Collections;
-import java.util.List;
-
 import static com.google.common.truth.Truth.assertWithMessage;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.MultimapBuilder;
+import java.util.Collections;
+import java.util.List;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import to.lean.tools.gmail.importer.local.LocalMessage;
 
 public class GmailSyncerTest {
 
@@ -52,7 +50,8 @@ public class GmailSyncerTest {
     try {
       gmailSyncer.sync(Collections.emptyList());
       assertWithMessage("sync() should fail if init() is not called first.");
-    } catch (Exception ignored) {}
+    } catch (Exception ignored) {
+    }
   }
 
   @Test
@@ -69,10 +68,10 @@ public class GmailSyncerTest {
   public void testSyncWithMessages() throws Exception {
     setUpEmptyMailbox();
 
-    ImmutableList<LocalMessage> localMessages = ImmutableList.of(
-        new FakeLocalMessage("Subject 1", "Hello"),
-        new FakeLocalMessage("Subject 2", "Good bye")
-    );
+    ImmutableList<LocalMessage> localMessages =
+        ImmutableList.of(
+            new FakeLocalMessage("Subject 1", "Hello"),
+            new FakeLocalMessage("Subject 2", "Good bye"));
 
     gmailSyncer.init();
     gmailSyncer.sync(localMessages);
@@ -80,9 +79,10 @@ public class GmailSyncerTest {
 
   private void setUpEmptyMailbox() {
     when(mailbox.mapMessageIds(anyListOf(LocalMessage.class)))
-        .thenAnswer(invocation -> {
-          return MultimapBuilder.hashKeys().linkedListValues().build();
-        });
+        .thenAnswer(
+            invocation -> {
+              return MultimapBuilder.hashKeys().linkedListValues().build();
+            });
   }
 
   private static class FakeLocalMessageBuilder {
@@ -95,10 +95,7 @@ public class GmailSyncerTest {
   }
 
   private static class FakeLocalMessage implements LocalMessage {
-    public FakeLocalMessage(
-        String from,
-        String body) {
-    }
+    public FakeLocalMessage(String from, String body) {}
 
     @Override
     public String getMessageId() {

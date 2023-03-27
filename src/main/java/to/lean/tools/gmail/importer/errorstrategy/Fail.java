@@ -18,13 +18,10 @@ package to.lean.tools.gmail.importer.errorstrategy;
 
 import to.lean.tools.gmail.importer.local.LocalMessage;
 
-/**
- * Handles upload errors by failing the entire import.
- */
+/** Handles upload errors by failing the entire import. */
 public class Fail implements ErrorStrategy {
   @Override
-  public Result handleError(
-      LocalMessage localMessage, Exception gmailApiException) {
+  public Result handleError(LocalMessage localMessage, Exception gmailApiException) {
     return Result.STOP;
   }
 }

@@ -16,6 +16,13 @@
 
 package to.lean.tools.gmail.importer.gmail;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
@@ -24,13 +31,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.MockitoAnnotations;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(JUnit4.class)
 public class UnsuccessfulResponseHandlerChainerTest {
@@ -57,66 +57,42 @@ public class UnsuccessfulResponseHandlerChainerTest {
 
   @Test
   public void testChainOfOne() throws Exception {
-    HttpUnsuccessfulResponseHandler handler =
-        mock(HttpUnsuccessfulResponseHandler.class);
+    HttpUnsuccessfulResponseHandler handler = mock(HttpUnsuccessfulResponseHandler.class);
 
-    chainer.chain(handler)
-        .handleResponse(httpRequest, httpResponse, SUPPORTS_RETRY);
+    chainer.chain(handler).handleResponse(httpRequest, httpResponse, SUPPORTS_RETRY);
 
     verify(handler)
-        .handleResponse(
-            any(HttpRequest.class),
-            any(HttpResponse.class),
-            any(Boolean.TYPE));
+        .handleResponse(any(HttpRequest.class), any(HttpResponse.class), any(Boolean.TYPE));
   }
 
   @Test
   public void testChainOfTwo() throws Exception {
-    HttpUnsuccessfulResponseHandler handler1 =
-        mock(HttpUnsuccessfulResponseHandler.class);
-    HttpUnsuccessfulResponseHandler handler2 =
-        mock(HttpUnsuccessfulResponseHandler.class);
+    HttpUnsuccessfulResponseHandler handler1 = mock(HttpUnsuccessfulResponseHandler.class);
+    HttpUnsuccessfulResponseHandler handler2 = mock(HttpUnsuccessfulResponseHandler.class);
 
-    chainer.chain(handler1, handler2)
-        .handleResponse(httpRequest, httpResponse, SUPPORTS_RETRY);
+    chainer.chain(handler1, handler2).handleResponse(httpRequest, httpResponse, SUPPORTS_RETRY);
 
     verify(handler1)
-        .handleResponse(
-            any(HttpRequest.class),
-            any(HttpResponse.class),
-            any(Boolean.TYPE));
+        .handleResponse(any(HttpRequest.class), any(HttpResponse.class), any(Boolean.TYPE));
 
     verify(handler2)
-        .handleResponse(
-            any(HttpRequest.class),
-            any(HttpResponse.class),
-            any(Boolean.TYPE));
+        .handleResponse(any(HttpRequest.class), any(HttpResponse.class), any(Boolean.TYPE));
   }
 
   @Test
   public void testChainOnlyCallsUntilTrue() throws Exception {
-    HttpUnsuccessfulResponseHandler handler1 =
-        mock(HttpUnsuccessfulResponseHandler.class);
-    HttpUnsuccessfulResponseHandler handler2 =
-        mock(HttpUnsuccessfulResponseHandler.class);
+    HttpUnsuccessfulResponseHandler handler1 = mock(HttpUnsuccessfulResponseHandler.class);
+    HttpUnsuccessfulResponseHandler handler2 = mock(HttpUnsuccessfulResponseHandler.class);
 
-    when(handler1.handleResponse(
-        any(HttpRequest.class), any(HttpResponse.class), anyBoolean()))
+    when(handler1.handleResponse(any(HttpRequest.class), any(HttpResponse.class), anyBoolean()))
         .thenReturn(true);
 
-    chainer.chain(handler1, handler2)
-        .handleResponse(httpRequest, httpResponse, SUPPORTS_RETRY);
+    chainer.chain(handler1, handler2).handleResponse(httpRequest, httpResponse, SUPPORTS_RETRY);
 
     verify(handler1)
-        .handleResponse(
-            any(HttpRequest.class),
-            any(HttpResponse.class),
-            any(Boolean.TYPE));
+        .handleResponse(any(HttpRequest.class), any(HttpResponse.class), any(Boolean.TYPE));
 
     verify(handler2, never())
-        .handleResponse(
-            any(HttpRequest.class),
-            any(HttpResponse.class),
-            any(Boolean.TYPE));
+        .handleResponse(any(HttpRequest.class), any(HttpResponse.class), any(Boolean.TYPE));
   }
 }

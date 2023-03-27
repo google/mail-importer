@@ -17,18 +17,15 @@
 package to.lean.tools.gmail.importer.local;
 
 import com.google.common.annotations.VisibleForTesting;
-
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.mail.Folder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.mail.Folder;
 
-/**
- * Scans local mailboxes for messages to sync.
- */
+/** Scans local mailboxes for messages to sync. */
 @NotThreadSafe
 public abstract class JavaxMailStorage implements LocalStorage {
   protected final Logger logger;
@@ -45,8 +42,7 @@ public abstract class JavaxMailStorage implements LocalStorage {
   }
 
   /** Must return a filtered view of {@code iterator}. */
-  protected Iterator<JavaxMailFolder> filterFolders(
-      Iterator<JavaxMailFolder> iterator) {
+  protected Iterator<JavaxMailFolder> filterFolders(Iterator<JavaxMailFolder> iterator) {
     return iterator;
   }
 
@@ -69,12 +65,14 @@ public abstract class JavaxMailStorage implements LocalStorage {
       if (!folder.isOpen()) {
         folder.open(Folder.READ_ONLY);
       }
-      this.messageIterator = (folder.getType() & Folder.HOLDS_MESSAGES) > 0
-          ? new MessageIterator()
-          : Collections.emptyIterator();
-      this.subfolderIterator = (folder.getType() & Folder.HOLDS_FOLDERS) > 0
-          ? new SubfolderIterator()
-          : Collections.emptyIterator();
+      this.messageIterator =
+          (folder.getType() & Folder.HOLDS_MESSAGES) > 0
+              ? new MessageIterator()
+              : Collections.emptyIterator();
+      this.subfolderIterator =
+          (folder.getType() & Folder.HOLDS_FOLDERS) > 0
+              ? new SubfolderIterator()
+              : Collections.emptyIterator();
     }
 
     @Override
@@ -121,8 +119,7 @@ public abstract class JavaxMailStorage implements LocalStorage {
 
     private class SubfolderIterator implements Iterator<LocalMessage> {
       private final Iterator<JavaxMailFolder> folderIterator;
-      private Iterator<LocalMessage> currentMessageIterator =
-          Collections.emptyIterator();
+      private Iterator<LocalMessage> currentMessageIterator = Collections.emptyIterator();
 
       private SubfolderIterator() {
         folderIterator = filterFolders(Arrays.asList(folder.list()).iterator());
@@ -130,8 +127,7 @@ public abstract class JavaxMailStorage implements LocalStorage {
 
       @Override
       public boolean hasNext() {
-        while (!currentMessageIterator.hasNext()
-            && folderIterator.hasNext()) {
+        while (!currentMessageIterator.hasNext() && folderIterator.hasNext()) {
           currentMessageIterator = new FolderIterator(folderIterator.next());
         }
         return currentMessageIterator.hasNext();
@@ -139,8 +135,7 @@ public abstract class JavaxMailStorage implements LocalStorage {
 
       @Override
       public LocalMessage next() {
-        while (!currentMessageIterator.hasNext()
-            && folderIterator.hasNext()) {
+        while (!currentMessageIterator.hasNext() && folderIterator.hasNext()) {
           currentMessageIterator = new FolderIterator(folderIterator.next());
         }
         if (currentMessageIterator.hasNext()) {

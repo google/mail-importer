@@ -20,6 +20,11 @@ import com.google.api.client.util.Lists;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import to.lean.tools.gmail.importer.gmail.GmailServiceModule;
@@ -28,17 +33,10 @@ import to.lean.tools.gmail.importer.local.LocalMessage;
 import to.lean.tools.gmail.importer.local.LocalStorage;
 import to.lean.tools.gmail.importer.local.thunderbird.ThunderbirdModule;
 
-import javax.mail.MessagingException;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Logger;
-
 /**
- * Copies messages from {@link to.lean.tools.gmail.importer.local.LocalStorage}
- * to a {@link to.lean.tools.gmail.importer.gmail.GmailSyncer} in batches. This
- * processes is single-threaded. When errors occur, an
- * {@link to.lean.tools.gmail.importer.errorstrategy.ErrorStrategy} is used to
+ * Copies messages from {@link to.lean.tools.gmail.importer.local.LocalStorage} to a {@link
+ * to.lean.tools.gmail.importer.gmail.GmailSyncer} in batches. This processes is single-threaded.
+ * When errors occur, an {@link to.lean.tools.gmail.importer.errorstrategy.ErrorStrategy} is used to
  * handle the error.
  */
 public class Importer {
@@ -50,21 +48,16 @@ public class Importer {
   private final CommandLineArguments commandLineArguments;
 
   /**
-   * Main entry point for running {@code Importer} as a stand-alone application.
-   * Commandline options can be found in
-   * {@link to.lean.tools.gmail.importer.CommandLineArguments}.
+   * Main entry point for running {@code Importer} as a stand-alone application. Commandline options
+   * can be found in {@link to.lean.tools.gmail.importer.CommandLineArguments}.
    *
    * @param args the command line arguments
-   * @throws MessagingException if there is a problem reading from the local
-   *     store
+   * @throws MessagingException if there is a problem reading from the local store
    * @throws IOException if there is a problem with the Gmail connection
    */
-  public static void main(String[] args)
-      throws MessagingException, IOException {
-    CommandLineArguments commandLineArguments =
-        new CommandLineArguments();
-    CmdLineParser commandLine =
-        new CmdLineParser(commandLineArguments);
+  public static void main(String[] args) throws MessagingException, IOException {
+    CommandLineArguments commandLineArguments = new CommandLineArguments();
+    CmdLineParser commandLine = new CmdLineParser(commandLineArguments);
     try {
       commandLine.parseArgument(args);
     } catch (CmdLineException e) {
@@ -73,10 +66,11 @@ public class Importer {
       System.exit(1);
     }
 
-    Injector injector = Guice.createInjector(
-        new FlagsModule(commandLineArguments),
-        new ThunderbirdModule(),
-        new GmailServiceModule());
+    Injector injector =
+        Guice.createInjector(
+            new FlagsModule(commandLineArguments),
+            new ThunderbirdModule(),
+            new GmailServiceModule());
 
     Importer importer = injector.getInstance(Importer.class);
     importer.importMail();
@@ -103,10 +97,8 @@ public class Importer {
     while (iterator.hasNext() && keepImporting(messagesImported)) {
       List<LocalMessage> batch = Lists.newArrayListWithCapacity(BATCH_SIZE);
       for (int i = 0;
-           i < BATCH_SIZE
-               && iterator.hasNext()
-               && keepImporting(messagesImported);
-           i++) {
+          i < BATCH_SIZE && iterator.hasNext() && keepImporting(messagesImported);
+          i++) {
         LocalMessage message = iterator.next();
         logger.fine(() -> "Id: " + message.getMessageId());
         logger.fine(() -> "Folders: " + message.getFolders());

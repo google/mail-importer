@@ -16,6 +16,13 @@
 
 package to.lean.tools.gmail.importer.local;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.logging.Logger;
+import javax.mail.Folder;
+import javax.mail.MessagingException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,14 +32,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.internal.matchers.GreaterThan;
 import org.mockito.internal.matchers.LessOrEqual;
-
-import javax.mail.Folder;
-import javax.mail.MessagingException;
-import java.util.logging.Logger;
-
-import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(JUnit4.class)
 public class JavaxMailStorageTest {
@@ -59,17 +58,19 @@ public class JavaxMailStorageTest {
 
   @Test
   public void testIterator_withSubFolders() throws Exception {
-    javaxMailFolder = makeMockFolderWithMessages(5,
-        makeMockFolderWithMessages(10),
-        makeMockFolderWithMessages(15,
-            makeMockFolderWithMessages(6,
-                makeMockFolderWithMessages(9),
-                makeMockFolderWithMessages(3)),
-            makeMockFolderWithMessages(0,
-                makeMockFolderWithMessages(0,
-                    makeMockFolderWithMessages(0,
-                        makeMockFolderWithMessages(5))))),
-        makeMockFolderWithMessages(7));
+    javaxMailFolder =
+        makeMockFolderWithMessages(
+            5,
+            makeMockFolderWithMessages(10),
+            makeMockFolderWithMessages(
+                15,
+                makeMockFolderWithMessages(
+                    6, makeMockFolderWithMessages(9), makeMockFolderWithMessages(3)),
+                makeMockFolderWithMessages(
+                    0,
+                    makeMockFolderWithMessages(
+                        0, makeMockFolderWithMessages(0, makeMockFolderWithMessages(5))))),
+            makeMockFolderWithMessages(7));
 
     javaxMailStorage = newJavaxMailStorage();
 
@@ -78,17 +79,19 @@ public class JavaxMailStorageTest {
 
   @Test
   public void testIterator_pathologicalNoMessages() throws Exception {
-    javaxMailFolder = makeMockFolderWithMessages(0,
-        makeMockFolderWithMessages(0),
-        makeMockFolderWithMessages(0,
-            makeMockFolderWithMessages(0,
-                makeMockFolderWithMessages(0),
-                makeMockFolderWithMessages(0)),
-            makeMockFolderWithMessages(0,
-                makeMockFolderWithMessages(0,
-                    makeMockFolderWithMessages(0,
-                        makeMockFolderWithMessages(0))))),
-        makeMockFolderWithMessages(0));
+    javaxMailFolder =
+        makeMockFolderWithMessages(
+            0,
+            makeMockFolderWithMessages(0),
+            makeMockFolderWithMessages(
+                0,
+                makeMockFolderWithMessages(
+                    0, makeMockFolderWithMessages(0), makeMockFolderWithMessages(0)),
+                makeMockFolderWithMessages(
+                    0,
+                    makeMockFolderWithMessages(
+                        0, makeMockFolderWithMessages(0, makeMockFolderWithMessages(0))))),
+            makeMockFolderWithMessages(0));
 
     javaxMailStorage = newJavaxMailStorage();
 
@@ -97,41 +100,37 @@ public class JavaxMailStorageTest {
 
   @Test
   public void testIterator_getWithoutLooking() throws Exception {
-    javaxMailFolder = makeMockFolderWithMessages(0,
-        makeMockFolderWithMessages(0),
-        makeMockFolderWithMessages(0,
-            makeMockFolderWithMessages(0,
-                makeMockFolderWithMessages(0),
-                makeMockFolderWithMessages(1))));
+    javaxMailFolder =
+        makeMockFolderWithMessages(
+            0,
+            makeMockFolderWithMessages(0),
+            makeMockFolderWithMessages(
+                0,
+                makeMockFolderWithMessages(
+                    0, makeMockFolderWithMessages(0), makeMockFolderWithMessages(1))));
 
     javaxMailStorage = newJavaxMailStorage();
 
     assertThat(javaxMailStorage.iterator().next()).isNotNull();
   }
 
-  private JavaxMailFolder makeMockFolderWithMessages(int numMessages,
-      JavaxMailFolder... folders) {
+  private JavaxMailFolder makeMockFolderWithMessages(int numMessages, JavaxMailFolder... folders) {
     JavaxMailFolder javaxMailFolder = mock(JavaxMailFolder.class);
 
-    when(javaxMailFolder.getType())
-        .thenReturn(Folder.HOLDS_FOLDERS | Folder.HOLDS_MESSAGES);
+    when(javaxMailFolder.getType()).thenReturn(Folder.HOLDS_FOLDERS | Folder.HOLDS_MESSAGES);
 
-    when(javaxMailFolder.getMessageCount())
-        .thenReturn(numMessages);
+    when(javaxMailFolder.getMessageCount()).thenReturn(numMessages);
     when(javaxMailFolder.getMessage(Matchers.intThat(new LessOrEqual<>(numMessages))))
         .thenReturn(mock(JavaxMailMessage.class));
     when(javaxMailFolder.getMessage(Matchers.intThat(new GreaterThan<>(numMessages))))
-        .thenThrow(new RuntimeMessagingException(
-            new MessagingException("crap")));
+        .thenThrow(new RuntimeMessagingException(new MessagingException("crap")));
 
     when(javaxMailFolder.list()).thenReturn(folders);
     return javaxMailFolder;
   }
 
   private JavaxMailStorage newJavaxMailStorage() {
-    return new JavaxMailStorage(
-        Logger.getLogger("test"),
-        javaxMailFolder) {
+    return new JavaxMailStorage(Logger.getLogger("test"), javaxMailFolder) {
       @Override
       public LocalMessage createLocalMessage(JavaxMailMessage message) {
         return mock(LocalMessage.class);

@@ -16,16 +16,15 @@
 
 package to.lean.tools.gmail.importer.local;
 
-import javax.mail.MessagingException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import javax.mail.MessagingException;
 
 /**
- * Wraps a {@link javax.mail.MessagingException}. All methods are delegated to
- * the original exception except {@link #fillInStackTrace()} which is called in
- * the constructor before the original exception is available. As all
- * stack-getting methods are delegated, this doesn't make much difference in
- * practice.
+ * Wraps a {@link javax.mail.MessagingException}. All methods are delegated to the original
+ * exception except {@link #fillInStackTrace()} which is called in the constructor before the
+ * original exception is available. As all stack-getting methods are delegated, this doesn't make
+ * much difference in practice.
  */
 public class RuntimeMessagingException extends RuntimeException {
   private final MessagingException exception;

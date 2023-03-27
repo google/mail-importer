@@ -17,12 +17,9 @@
 package to.lean.tools.gmail.importer;
 
 import com.google.inject.throwingproviders.CheckedProvider;
-
 import java.io.IOException;
 
-/**
- * A {@link CheckedProvider} that can throw an {@link IOException}.
- */
+/** A {@link CheckedProvider} that can throw an {@link IOException}. */
 public interface IoProvider<T> extends CheckedProvider<T> {
   @Override
   T get() throws IOException;

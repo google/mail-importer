@@ -17,16 +17,13 @@
 package to.lean.tools.gmail.importer.local.thunderbird;
 
 import com.google.common.collect.Iterators;
+import java.util.Iterator;
+import java.util.logging.Logger;
 import to.lean.tools.gmail.importer.local.JavaxMailFolder;
 import to.lean.tools.gmail.importer.local.JavaxMailMessage;
 import to.lean.tools.gmail.importer.local.JavaxMailStorage;
 
-import java.util.Iterator;
-import java.util.logging.Logger;
-
-/**
-* Created by flan on 12/21/14.
-*/
+/** Created by flan on 12/21/14. */
 class ThunderbirdMailStorage extends JavaxMailStorage {
 
   private final XMozillaStatusParser statusParser;
@@ -38,15 +35,12 @@ class ThunderbirdMailStorage extends JavaxMailStorage {
   }
 
   @Override
-  protected Iterator<JavaxMailFolder> filterFolders(
-      Iterator<JavaxMailFolder> iterator) {
-    return Iterators.filter(iterator,
-        folder -> !folder.getName().contains("@"));
+  protected Iterator<JavaxMailFolder> filterFolders(Iterator<JavaxMailFolder> iterator) {
+    return Iterators.filter(iterator, folder -> !folder.getName().contains("@"));
   }
 
   @Override
-  public ThunderbirdLocalMessage createLocalMessage(
-      JavaxMailMessage message) {
+  public ThunderbirdLocalMessage createLocalMessage(JavaxMailMessage message) {
     return new ThunderbirdLocalMessage(message, this::relativize, statusParser);
   }
 
@@ -56,9 +50,7 @@ class ThunderbirdMailStorage extends JavaxMailStorage {
      * folder names.
      */
     String rootFullName = root.getFullName();
-    return (folder.startsWith(rootFullName)
-                ? folder.substring(rootFullName.length() + 1)
-                : folder)
+    return (folder.startsWith(rootFullName) ? folder.substring(rootFullName.length() + 1) : folder)
         .replace(".sbd", "");
   }
 }

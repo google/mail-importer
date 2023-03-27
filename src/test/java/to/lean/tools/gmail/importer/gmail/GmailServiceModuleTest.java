@@ -30,5 +30,4 @@ public class GmailServiceModuleTest {
 
     moduleTester.assertAllDependenciesDeclared();
   }
-
 }

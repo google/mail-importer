@@ -19,8 +19,8 @@ package to.lean.tools.gmail.importer.local;
 import java.util.List;
 
 /**
- * Provides a generic interface to messages on local storage that can be used
- * get the contents and applicable labels for the message.
+ * Provides a generic interface to messages on local storage that can be used get the contents and
+ * applicable labels for the message.
  */
 public interface LocalMessage {
   /** Returns the RFC822 message id of the message. */
@@ -30,21 +30,17 @@ public interface LocalMessage {
   String getFromHeader();
 
   /**
-   * Returns a list of folders that the message is in. The names of the folders
-   * must be relative to the root of the local store. For example, if the local
-   * store is at {@code .../Mail/pop.host.com} and the message is in
-   * {@code .../Mail/pop.host.com/work/client/job}, then the folder should be
-   * named "work/client/job".
+   * Returns a list of folders that the message is in. The names of the folders must be relative to
+   * the root of the local store. For example, if the local store is at {@code
+   * .../Mail/pop.host.com} and the message is in {@code .../Mail/pop.host.com/work/client/job},
+   * then the folder should be named "work/client/job".
    *
-   * <p>Note that if messages with the same id are in different folders and it
-   * is OK to not return all of the names at once if the message in the other
-   * folder will be processed.
+   * <p>Note that if messages with the same id are in different folders and it is OK to not return
+   * all of the names at once if the message in the other folder will be processed.
    */
   List<String> getFolders();
 
-  /**
-   * Returns the raw, underlying bytes of the message.
-   */
+  /** Returns the raw, underlying bytes of the message. */
   byte[] getRawContent();
 
   boolean isUnread();

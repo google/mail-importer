@@ -18,33 +18,42 @@ package to.lean.tools.gmail.importer;
 
 import org.kohsuke.args4j.Option;
 
-/**
- * Encapsulation of all command line arguments.
- */
+/** Encapsulation of all command line arguments. */
 public class CommandLineArguments {
 
-  @Option(name = "--mailbox", metaVar = "DIRECTORY", required = true,
+  @Option(
+      name = "--mailbox",
+      metaVar = "DIRECTORY",
+      required = true,
       usage = "Specifies the root of the mailbox to open.")
   public String mailboxFileName;
 
-  @Option(name = "--user", metaVar = "USER",
-      usage = "Specifies the Gmail user name for whom to import mail. The "
-          + "default value of 'me' means that the account will be taken from "
-          + "the credentials provided. If any other value is specified, that "
-          + "value must match the credentials. This mode allows administrators "
-          + "to import mail into other accounts using their administrator "
-          + "credentials.")
+  @Option(
+      name = "--user",
+      metaVar = "USER",
+      usage =
+          "Specifies the Gmail user name for whom to import mail. The "
+              + "default value of 'me' means that the account will be taken from "
+              + "the credentials provided. If any other value is specified, that "
+              + "value must match the credentials. This mode allows administrators "
+              + "to import mail into other accounts using their administrator "
+              + "credentials.")
   public String user = "me";
 
-  @Option(name = "--max_messages",
-      usage = "The maximim number of messages to import to Gmail in this "
-          + "run. This can be useful for testing an import.")
+  @Option(
+      name = "--max_messages",
+      usage =
+          "The maximim number of messages to import to Gmail in this "
+              + "run. This can be useful for testing an import.")
   public Integer maxMessages;
 
-  @Option(name = "--client_secret_resource_path",
-      metaVar = "SECRET_RESOURCE_PATH", hidden = true,
-      usage = "Path to the developer secret that developers can retrieve "
-          + "from the developer console. Pre-built binaries should already "
-          + "have this included.")
+  @Option(
+      name = "--client_secret_resource_path",
+      metaVar = "SECRET_RESOURCE_PATH",
+      hidden = true,
+      usage =
+          "Path to the developer secret that developers can retrieve "
+              + "from the developer console. Pre-built binaries should already "
+              + "have this included.")
   public String clientSecretResourcePath = "/resources/client_secret.json";
 }

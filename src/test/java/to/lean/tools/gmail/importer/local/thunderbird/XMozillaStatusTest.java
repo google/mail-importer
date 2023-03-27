@@ -16,22 +16,21 @@
 
 package to.lean.tools.gmail.importer.local.thunderbird;
 
+import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.google.common.base.VerifyException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import to.lean.tools.gmail.importer.local.JavaxMailMessage;
 
-import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth.assertWithMessage;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 @RunWith(JUnit4.class)
 public class XMozillaStatusTest {
 
-  private XMozillaStatusParser xMozillaStatusParser =
-      new XMozillaStatusParser();
+  private XMozillaStatusParser xMozillaStatusParser = new XMozillaStatusParser();
 
   @Test
   public void testNoStatusHeader() throws Exception {
@@ -70,8 +69,7 @@ public class XMozillaStatusTest {
 
   private XMozillaStatus statusForHeader(String... headers) {
     JavaxMailMessage message = mock(JavaxMailMessage.class);
-    when(message.getHeader("X-Mozilla-Status"))
-        .thenReturn(headers);
+    when(message.getHeader("X-Mozilla-Status")).thenReturn(headers);
     return xMozillaStatusParser.parse(message);
   }
 }
