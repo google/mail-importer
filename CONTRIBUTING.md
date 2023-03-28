@@ -6,6 +6,7 @@ the end).
 ## Legal
 
 ### Before you contribute
+
 Before we can use your code, you must sign the
 [Google Individual Contributor License Agreement](https://cla.developers.google.com/about/google-individual)
 (CLA), which you can do online. The CLA is necessary mainly because you own the
@@ -21,8 +22,9 @@ possibly guide you. Coordinating up front makes it much easier to avoid
 frustration later on.
 
 ### The small print
-Contributions made by corporations are covered by a different agreement than
-the one above, the
+
+Contributions made by corporations are covered by a different agreement than the
+one above, the
 [Software Grant and Corporate Contributor License Agreement](https://cla.developers.google.com/about/google-corporate).
 
 ## Code Reviews
@@ -30,19 +32,22 @@ the one above, the
 All submissions, including submissions by project members, require review.
 
 ### How
-We use Github pull requests. In your request, please give a short explanation
-of what you are trying to do and why. In the git commit message for the patch,
-the first line should be a summary of the whole patch. After that, explain the
-patch in more detail.
+
+We use Github pull requests. In your request, please give a short explanation of
+what you are trying to do and why. In the git commit message for the patch, the
+first line should be a summary of the whole patch. After that, explain the patch
+in more detail.
 
 ### Style
+
 For code style, we follow the
 [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).
-We currently use an 80-column limit.
+We currently use a 100-column limit. We prefer to use `google-java-format` to
+format our code.
 
-We use Java 8 including all of the new functional fanciness. However, we try
-to be reasonable and use it only when it actually makes things simpler and
-clearer.
+We use Java 8 including all of the new functional fanciness. However, we try to
+be reasonable and use it only when it actually makes things simpler and clearer.
 
 ### Design
+
 There is rough documentation of the current design in [Design.md](Design.md).

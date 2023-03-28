@@ -18,12 +18,9 @@ package to.lean.tools.gmail.importer.gmail;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Charsets;
-
 import java.util.Base64;
 
-/**
- * Encapsulates information about the user in a type safe way.
- */
+/** Encapsulates information about the user in a type safe way. */
 @AutoValue
 abstract class User {
 
@@ -34,7 +31,6 @@ abstract class User {
   abstract String getEmailAddress();
 
   String getEmailAddressAsKey() {
-    return Base64.getEncoder()
-        .encodeToString(getEmailAddress().getBytes(Charsets.UTF_8));
+    return Base64.getEncoder().encodeToString(getEmailAddress().getBytes(Charsets.UTF_8));
   }
 }

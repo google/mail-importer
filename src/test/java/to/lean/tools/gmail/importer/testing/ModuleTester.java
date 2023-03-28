@@ -26,13 +26,10 @@ import com.google.inject.spi.Element;
 import com.google.inject.spi.Elements;
 import com.google.inject.spi.ProviderLookup;
 import com.google.inject.util.Providers;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by flan on 9/5/15.
- */
+/** Created by flan on 9/5/15. */
 public class ModuleTester {
   private Module module;
 
@@ -45,32 +42,35 @@ public class ModuleTester {
 
     List<Element> elements = Elements.getElements(module);
     for (Element element : elements) {
-      element.acceptVisitor(new DefaultElementVisitor<Void>() {
-        @Override
-        public <T> Void visit(ProviderLookup<T> providerLookup) {
-          // Required keys are the only ones with null injection points.
-          if (providerLookup.getDependency().getInjectionPoint() == null) {
-            requiredKeys.add(providerLookup.getKey());
-          }
-          return null;
-        }
-      });
+      element.acceptVisitor(
+          new DefaultElementVisitor<Void>() {
+            @Override
+            public <T> Void visit(ProviderLookup<T> providerLookup) {
+              // Required keys are the only ones with null injection points.
+              if (providerLookup.getDependency().getInjectionPoint() == null) {
+                requiredKeys.add(providerLookup.getKey());
+              }
+              return null;
+            }
+          });
     }
 
-    Injector injector = Guice.createInjector(module,
-        new AbstractModule() {
-          @Override
-          @SuppressWarnings("unchecked")
-          protected void configure() {
-            binder().disableCircularProxies();
-            binder().requireAtInjectOnConstructors();
-            binder().requireExactBindingAnnotations();
+    Injector injector =
+        Guice.createInjector(
+            module,
+            new AbstractModule() {
+              @Override
+              @SuppressWarnings("unchecked")
+              protected void configure() {
+                binder().disableCircularProxies();
+                binder().requireAtInjectOnConstructors();
+                binder().requireExactBindingAnnotations();
 
-            for (Key<?> key : requiredKeys) {
-              bind((Key) key).toProvider(Providers.of(null));
-            }
-          }
-        });
+                for (Key<?> key : requiredKeys) {
+                  bind((Key) key).toProvider(Providers.of(null));
+                }
+              }
+            });
 
     injector.getAllBindings();
   }

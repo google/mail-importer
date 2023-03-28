@@ -16,7 +16,12 @@
 
 package to.lean.tools.gmail.importer.local.thunderbird;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.google.common.collect.ImmutableList;
+import java.util.logging.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,12 +30,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import to.lean.tools.gmail.importer.local.JavaxMailFolder;
 import to.lean.tools.gmail.importer.local.JavaxMailMessage;
-
-import java.util.logging.Logger;
-
-import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(JUnit4.class)
 public class ThunderbirdMailStorageTest {
@@ -42,22 +41,17 @@ public class ThunderbirdMailStorageTest {
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
 
-    mailStorage = new ThunderbirdMailStorage(
-        Logger.getAnonymousLogger(),
-        rootFolder,
-        new XMozillaStatusParser());
+    mailStorage =
+        new ThunderbirdMailStorage(
+            Logger.getAnonymousLogger(), rootFolder, new XMozillaStatusParser());
   }
 
   @Test
   public void testFilterFolders() throws Exception {
     ImmutableList<JavaxMailFolder> folders =
-        ImmutableList.of(
-            makeFolder("folder1"),
-            makeFolder("@folder2"),
-            makeFolder("!folder3")
-        );
-    ImmutableList<JavaxMailFolder> expectedFolders = ImmutableList.of(
-        folders.get(0), folders.get(2));
+        ImmutableList.of(makeFolder("folder1"), makeFolder("@folder2"), makeFolder("!folder3"));
+    ImmutableList<JavaxMailFolder> expectedFolders =
+        ImmutableList.of(folders.get(0), folders.get(2));
 
     ImmutableList<JavaxMailFolder> filteredFolders =
         ImmutableList.copyOf(mailStorage.filterFolders(folders.iterator()));
@@ -72,13 +66,9 @@ public class ThunderbirdMailStorageTest {
     when(rootFolder.getFullName()).thenReturn("/abc/root");
     when(message.getFolder()).thenReturn(mailMessageFolder);
 
-    ThunderbirdLocalMessage localMessage =
-        mailStorage.createLocalMessage(message);
+    ThunderbirdLocalMessage localMessage = mailStorage.createLocalMessage(message);
 
-
-    assertThat(localMessage.getFolders())
-        .containsExactlyElementsIn(
-            ImmutableList.of("xyz/pdq"));
+    assertThat(localMessage.getFolders()).containsExactlyElementsIn(ImmutableList.of("xyz/pdq"));
   }
 
   private JavaxMailFolder makeFolder(String name) {

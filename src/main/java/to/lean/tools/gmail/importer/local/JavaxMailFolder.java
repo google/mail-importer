@@ -16,6 +16,7 @@
 
 package to.lean.tools.gmail.importer.local;
 
+import java.io.Closeable;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -28,16 +29,13 @@ import javax.mail.event.FolderListener;
 import javax.mail.event.MessageChangedListener;
 import javax.mail.event.MessageCountListener;
 import javax.mail.search.SearchTerm;
-import java.io.Closeable;
 
 /**
- * Friendly wrapper for {@code javax.mail.Folder} that brings it into the
- * modern age by implementing {@link AutoCloseable} and it doesn't throw any
- * checked exceptions, translating all {@code MessagingException}s into
- * {@code RuntimeMessagingException}s.
+ * Friendly wrapper for {@code javax.mail.Folder} that brings it into the modern age by implementing
+ * {@link AutoCloseable} and it doesn't throw any checked exceptions, translating all {@code
+ * MessagingException}s into {@code RuntimeMessagingException}s.
  */
-public class JavaxMailFolder extends Folder
-    implements Closeable, AutoCloseable {
+public class JavaxMailFolder extends Folder implements Closeable, AutoCloseable {
   Folder delegate;
 
   public JavaxMailFolder(Folder delegate) {
@@ -88,8 +86,7 @@ public class JavaxMailFolder extends Folder
   }
 
   @Override
-  public JavaxMailFolder[] list(String pattern)
-      throws RuntimeMessagingException {
+  public JavaxMailFolder[] list(String pattern) throws RuntimeMessagingException {
     try {
       return decorateFolderArray(delegate.list(pattern));
     } catch (MessagingException e) {
@@ -98,8 +95,7 @@ public class JavaxMailFolder extends Folder
   }
 
   @Override
-  public JavaxMailFolder[] listSubscribed(String pattern)
-      throws RuntimeMessagingException {
+  public JavaxMailFolder[] listSubscribed(String pattern) throws RuntimeMessagingException {
     try {
       return decorateFolderArray(delegate.listSubscribed(pattern));
     } catch (MessagingException e) {
@@ -158,8 +154,7 @@ public class JavaxMailFolder extends Folder
   }
 
   @Override
-  public void setSubscribed(boolean subscribe)
-      throws RuntimeMessagingException {
+  public void setSubscribed(boolean subscribe) throws RuntimeMessagingException {
     try {
       delegate.setSubscribed(subscribe);
     } catch (MessagingException e) {
@@ -177,8 +172,7 @@ public class JavaxMailFolder extends Folder
   }
 
   @Override
-  public JavaxMailFolder getFolder(String name)
-      throws RuntimeMessagingException {
+  public JavaxMailFolder getFolder(String name) throws RuntimeMessagingException {
     try {
       return new JavaxMailFolder(delegate.getFolder(name));
     } catch (MessagingException e) {
@@ -283,8 +277,7 @@ public class JavaxMailFolder extends Folder
   }
 
   @Override
-  public JavaxMailMessage getMessage(int msgnum)
-      throws RuntimeMessagingException {
+  public JavaxMailMessage getMessage(int msgnum) throws RuntimeMessagingException {
     try {
       return new JavaxMailMessage(delegate.getMessage(msgnum));
     } catch (MessagingException e) {
@@ -293,8 +286,7 @@ public class JavaxMailFolder extends Folder
   }
 
   @Override
-  public JavaxMailMessage[] getMessages(int start, int end)
-      throws RuntimeMessagingException {
+  public JavaxMailMessage[] getMessages(int start, int end) throws RuntimeMessagingException {
     try {
       return decorateMessageArray(delegate.getMessages(start, end));
     } catch (MessagingException e) {
@@ -303,8 +295,7 @@ public class JavaxMailFolder extends Folder
   }
 
   @Override
-  public JavaxMailMessage[] getMessages(int[] msgnums)
-      throws RuntimeMessagingException {
+  public JavaxMailMessage[] getMessages(int[] msgnums) throws RuntimeMessagingException {
     try {
       return decorateMessageArray(delegate.getMessages(msgnums));
     } catch (MessagingException e) {
@@ -331,8 +322,7 @@ public class JavaxMailFolder extends Folder
   }
 
   @Override
-  public void fetch(Message[] msgs, FetchProfile fp)
-      throws RuntimeMessagingException {
+  public void fetch(Message[] msgs, FetchProfile fp) throws RuntimeMessagingException {
     try {
       delegate.fetch(msgs, fp);
     } catch (MessagingException e) {
@@ -341,10 +331,7 @@ public class JavaxMailFolder extends Folder
   }
 
   @Override
-  public void setFlags(
-      Message[] msgs,
-      Flags flag,
-      boolean value) throws RuntimeMessagingException {
+  public void setFlags(Message[] msgs, Flags flag, boolean value) throws RuntimeMessagingException {
     try {
       delegate.setFlags(msgs, flag, value);
     } catch (MessagingException e) {
@@ -353,8 +340,8 @@ public class JavaxMailFolder extends Folder
   }
 
   @Override
-  public void setFlags(int start, int end, Flags flag, boolean value) throws
-      RuntimeMessagingException {
+  public void setFlags(int start, int end, Flags flag, boolean value)
+      throws RuntimeMessagingException {
     try {
       delegate.setFlags(start, end, flag, value);
     } catch (MessagingException e) {
@@ -363,8 +350,7 @@ public class JavaxMailFolder extends Folder
   }
 
   @Override
-  public void setFlags(int[] msgnums, Flags flag, boolean value) throws
-      RuntimeMessagingException {
+  public void setFlags(int[] msgnums, Flags flag, boolean value) throws RuntimeMessagingException {
     try {
       delegate.setFlags(msgnums, flag, value);
     } catch (MessagingException e) {
@@ -373,8 +359,7 @@ public class JavaxMailFolder extends Folder
   }
 
   @Override
-  public void copyMessages(Message[] msgs, Folder folder) throws
-      RuntimeMessagingException {
+  public void copyMessages(Message[] msgs, Folder folder) throws RuntimeMessagingException {
     try {
       delegate.copyMessages(msgs, folder);
     } catch (MessagingException e) {
@@ -392,8 +377,7 @@ public class JavaxMailFolder extends Folder
   }
 
   @Override
-  public JavaxMailMessage[] search(SearchTerm term)
-      throws RuntimeMessagingException {
+  public JavaxMailMessage[] search(SearchTerm term) throws RuntimeMessagingException {
     try {
       return decorateMessageArray(delegate.search(term));
     } catch (MessagingException e) {

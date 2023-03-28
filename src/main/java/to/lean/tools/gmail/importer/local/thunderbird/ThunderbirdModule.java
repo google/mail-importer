@@ -21,9 +21,7 @@ import com.google.inject.throwingproviders.ThrowingProviderBinder;
 import to.lean.tools.gmail.importer.MailProvider;
 import to.lean.tools.gmail.importer.local.LocalStorage;
 
-/**
- * Module that binds Thunderbird dependencies.
- */
+/** Module that binds Thunderbird dependencies. */
 public class ThunderbirdModule extends AbstractModule {
 
   @Override

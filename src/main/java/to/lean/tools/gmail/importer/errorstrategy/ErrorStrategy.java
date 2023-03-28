@@ -19,14 +19,12 @@ package to.lean.tools.gmail.importer.errorstrategy;
 import to.lean.tools.gmail.importer.local.LocalMessage;
 
 /**
- * Encapsulates interchangeable behavior for dealing with failures while
- * uploading a message to the Gmail API.
+ * Encapsulates interchangeable behavior for dealing with failures while uploading a message to the
+ * Gmail API.
  */
 public interface ErrorStrategy {
 
-  /**
-   * How the error should affect the import.
-   */
+  /** How the error should affect the import. */
   public enum Result {
     /** Retry the action that caused the original failure. */
     RETRY,
@@ -37,21 +35,20 @@ public interface ErrorStrategy {
   }
 
   /**
-   * Handles an error that has occurred while uploading a message to the Gmail
-   * API.
+   * Handles an error that has occurred while uploading a message to the Gmail API.
    *
-   * <p>If the call to this method returns {@code true}, then the message
-   * will be re-uploaded. Implementations that return {@code true} must be very
-   * careful not to continually retry the same message.
+   * <p>If the call to this method returns {@code true}, then the message will be re-uploaded.
+   * Implementations that return {@code true} must be very careful not to continually retry the same
+   * message.
    *
-   * <p>Implementations should not throw exceptions from this method; any
-   * thrown exception will cause the import to abort. The preferred way to
-   * abort the import is to return {@link Result#STOP}.
+   * <p>Implementations should not throw exceptions from this method; any thrown exception will
+   * cause the import to abort. The preferred way to abort the import is to return {@link
+   * Result#STOP}.
    *
    * @param localMessage the message that failed to upload
-   * @param gmailApiException the exception that caused the failure. Note that
-   *     this will be the error returned by the Gmail API. It could be that
-   *     the real cause is buried somewhere inside.
+   * @param gmailApiException the exception that caused the failure. Note that this will be the
+   *     error returned by the Gmail API. It could be that the real cause is buried somewhere
+   *     inside.
    * @return whether or not the message should be retried
    */
   Result handleError(LocalMessage localMessage, Exception gmailApiException);

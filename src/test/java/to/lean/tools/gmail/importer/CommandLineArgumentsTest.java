@@ -16,14 +16,14 @@
 
 package to.lean.tools.gmail.importer;
 
+import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
-
-import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth.assertWithMessage;
 
 @RunWith(JUnit4.class)
 public class CommandLineArgumentsTest {
@@ -35,11 +35,10 @@ public class CommandLineArgumentsTest {
 
   @Test
   public void testArgumentParsing_noRequiredArguments() throws Exception {
-    String[] args = { };
+    String[] args = {};
     try {
       parse(args);
-      assertWithMessage("Should have thrown an exception")
-          .fail();
+      assertWithMessage("Should have thrown an exception").fail();
     } catch (CmdLineException e) {
       assertThat(e.getMessage()).contains("--mailbox");
     }
@@ -47,33 +46,31 @@ public class CommandLineArgumentsTest {
 
   @Test
   public void testArgumentParsing_bogusMailbox() throws Exception {
-    String[] args = { "--mailbox=/no/such/directory" };
+    String[] args = {"--mailbox=/no/such/directory"};
 
     CommandLineArguments commandLineArguments = parse(args);
 
-    assertThat(commandLineArguments.mailboxFileName).named("mailbox")
+    assertWithMessage("mailbox")
+        .that(commandLineArguments.mailboxFileName)
         .isEqualTo("/no/such/directory");
-    assertThat(commandLineArguments.user).named("user")
-        .isEqualTo("me");
+    assertWithMessage("user").that(commandLineArguments.user).isEqualTo("me");
   }
 
   @Test
   public void testArgumentParsing_bogusMailboxAndUser() throws Exception {
-    String[] args = { "--mailbox=/no/such/directory", "--user=foobar" };
+    String[] args = {"--mailbox=/no/such/directory", "--user=foobar"};
 
     CommandLineArguments commandLineArguments = parse(args);
-    assertThat(commandLineArguments.mailboxFileName).named("mailbox")
+    assertWithMessage("mailbox")
+        .that(commandLineArguments.mailboxFileName)
         .isEqualTo("/no/such/directory");
-    assertThat(commandLineArguments.user).named("user")
-        .isEqualTo("foobar");
+    assertWithMessage("user").that(commandLineArguments.user).isEqualTo("foobar");
     assertThat(commandLineArguments.maxMessages).isNull();
   }
 
   private CommandLineArguments parse(String[] args) throws CmdLineException {
-    CommandLineArguments commandLineArguments =
-        new CommandLineArguments();
-    CmdLineParser commandLine =
-        new CmdLineParser(commandLineArguments);
+    CommandLineArguments commandLineArguments = new CommandLineArguments();
+    CmdLineParser commandLine = new CmdLineParser(commandLineArguments);
     commandLine.parseArgument(args);
     return commandLineArguments;
   }

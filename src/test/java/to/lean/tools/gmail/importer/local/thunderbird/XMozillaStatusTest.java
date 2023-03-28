@@ -16,22 +16,21 @@
 
 package to.lean.tools.gmail.importer.local.thunderbird;
 
+import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.google.common.base.VerifyException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import to.lean.tools.gmail.importer.local.JavaxMailMessage;
 
-import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth.assertWithMessage;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 @RunWith(JUnit4.class)
 public class XMozillaStatusTest {
 
-  private XMozillaStatusParser xMozillaStatusParser =
-      new XMozillaStatusParser();
+  private XMozillaStatusParser xMozillaStatusParser = new XMozillaStatusParser();
 
   @Test
   public void testNoStatusHeader() throws Exception {
@@ -52,26 +51,25 @@ public class XMozillaStatusTest {
   @Test
   public void testIsRead() throws Exception {
     XMozillaStatus status = statusForHeader("00000001");
-    assertThat(status.isRead()).named("isRead").isTrue();
+    assertWithMessage("isRead").that(status.isRead()).isTrue();
   }
 
   @Test
   public void testIsMarked() throws Exception {
     XMozillaStatus status = statusForHeader("00000004");
-    assertThat(status.isMarked()).named("isMarked").isTrue();
+    assertWithMessage("isMarked").that(status.isMarked()).isTrue();
   }
 
   @Test
   public void testIsMarkedAndRead() throws Exception {
     XMozillaStatus status = statusForHeader("00000005");
-    assertThat(status.isRead()).named("isRead").isTrue();
-    assertThat(status.isRead()).named("isMarked").isTrue();
+    assertWithMessage("isRead").that(status.isRead()).isTrue();
+    assertWithMessage("isMarked").that(status.isRead()).isTrue();
   }
 
   private XMozillaStatus statusForHeader(String... headers) {
     JavaxMailMessage message = mock(JavaxMailMessage.class);
-    when(message.getHeader("X-Mozilla-Status"))
-        .thenReturn(headers);
+    when(message.getHeader("X-Mozilla-Status")).thenReturn(headers);
     return xMozillaStatusParser.parse(message);
   }
 }

@@ -17,23 +17,20 @@
 package to.lean.tools.gmail.importer.local.thunderbird;
 
 import com.google.inject.Inject;
+import java.io.File;
+import java.util.Properties;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Store;
+import javax.mail.URLName;
 import to.lean.tools.gmail.importer.CommandLineArguments;
 import to.lean.tools.gmail.importer.MailProvider;
 import to.lean.tools.gmail.importer.local.JavaxMailFolder;
 import to.lean.tools.gmail.importer.local.JavaxMailStorage;
 import to.lean.tools.gmail.importer.local.LocalStorage;
 
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.URLName;
-import java.io.File;
-import java.util.Properties;
-import java.util.logging.Logger;
-
-/**
- * Reads a Thunderbird mailbox.
- */
+/** Reads a Thunderbird mailbox. */
 class ThunderbirdMailbox implements MailProvider<LocalStorage> {
 
   private final Logger logger;
@@ -41,9 +38,8 @@ class ThunderbirdMailbox implements MailProvider<LocalStorage> {
   private final XMozillaStatusParser statusParser;
 
   @Inject
-  ThunderbirdMailbox(Logger logger,
-      CommandLineArguments commandLineArguments,
-      XMozillaStatusParser statusParser) {
+  ThunderbirdMailbox(
+      Logger logger, CommandLineArguments commandLineArguments, XMozillaStatusParser statusParser) {
     this.logger = logger;
     this.commandLineArguments = commandLineArguments;
     this.statusParser = statusParser;
@@ -66,14 +62,10 @@ class ThunderbirdMailbox implements MailProvider<LocalStorage> {
       throw new MessagingException("No such mailbox:" + mailbox);
     }
 
-    Store store = session.getStore(
-        new URLName("mstor:" + mailbox.getAbsolutePath()));
+    Store store = session.getStore(new URLName("mstor:" + mailbox.getAbsolutePath()));
     store.connect();
 
     return new ThunderbirdMailStorage(
-        logger,
-        new JavaxMailFolder(store.getDefaultFolder()),
-        statusParser);
+        logger, new JavaxMailFolder(store.getDefaultFolder()), statusParser);
   }
-
 }

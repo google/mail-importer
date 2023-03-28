@@ -18,9 +18,7 @@ package to.lean.tools.gmail.importer;
 
 import com.google.inject.AbstractModule;
 
-/**
- * Makes the command line arguments available through Guice.
- */
+/** Makes the command line arguments available through Guice. */
 public class FlagsModule extends AbstractModule {
   private final CommandLineArguments commandLineArguments;
 
@@ -30,7 +28,6 @@ public class FlagsModule extends AbstractModule {
 
   @Override
   protected void configure() {
-    bind(CommandLineArguments.class)
-        .toInstance(commandLineArguments);
+    bind(CommandLineArguments.class).toInstance(commandLineArguments);
   }
 }

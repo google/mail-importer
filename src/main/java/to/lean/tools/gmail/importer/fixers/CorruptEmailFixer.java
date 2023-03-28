@@ -17,19 +17,18 @@
 package to.lean.tools.gmail.importer.fixers;
 
 import com.google.common.base.Preconditions;
-import to.lean.tools.gmail.importer.local.JavaxMailMessage;
-
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Properties;
 import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Properties;
+import to.lean.tools.gmail.importer.local.JavaxMailMessage;
 
 /**
  * Tries to fix broken e-mail addresses.
@@ -39,14 +38,14 @@ import java.util.Properties;
 public class CorruptEmailFixer {
   private boolean hasValidFrom(JavaxMailMessage message) {
     String[] fromHeaders = message.getHeader("From");
-    Preconditions.checkState(fromHeaders.length == 1,
+    Preconditions.checkState(
+        fromHeaders.length == 1,
         "Expected exactly 1 From header, got: " + Arrays.toString(fromHeaders));
-    String rawAddress = fromHeaders[0].replaceAll("\\s+"," ");
+    String rawAddress = fromHeaders[0].replaceAll("\\s+", " ");
     try {
-      InternetAddress[] address =
-          InternetAddress.parseHeader(rawAddress, true);
-      Preconditions.checkState(address.length == 1,
-          "Expected exactly 1 From address, got: " + Arrays.toString(address));
+      InternetAddress[] address = InternetAddress.parseHeader(rawAddress, true);
+      Preconditions.checkState(
+          address.length == 1, "Expected exactly 1 From address, got: " + Arrays.toString(address));
       System.err.format("Valid? %s == %s\n", address[0].toString(), rawAddress);
       return address[0].toString().equals(rawAddress);
     } catch (AddressException e) {
@@ -58,14 +57,13 @@ public class CorruptEmailFixer {
   private JavaxMailMessage tryToCorrectMessageFrom(JavaxMailMessage message) {
     System.err.format("Fixing message...\n");
     Address[] address = message.getFrom();
-    Preconditions.checkState(address.length == 1,
-        "Expected exactly 1 From address, got: "  + Arrays.toString(address));
+    Preconditions.checkState(
+        address.length == 1, "Expected exactly 1 From address, got: " + Arrays.toString(address));
 
     try {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       message.writeTo(outputStream);
-      ByteArrayInputStream inputStream =
-          new ByteArrayInputStream(outputStream.toByteArray());
+      ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
 
       Session session = Session.getInstance(new Properties());
       MimeMessage newMessage = new MimeMessage(session, inputStream);

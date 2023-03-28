@@ -17,12 +17,9 @@
 package to.lean.tools.gmail.importer;
 
 import com.google.inject.throwingproviders.CheckedProvider;
-
 import javax.mail.MessagingException;
 
-/**
- * A {@link CheckedProvider} that can throw a {@link MessagingException}.
- */
+/** A {@link CheckedProvider} that can throw a {@link MessagingException}. */
 public interface MailProvider<T> extends CheckedProvider<T> {
   @Override
   public T get() throws MessagingException;

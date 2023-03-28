@@ -16,8 +16,16 @@
 
 package to.lean.tools.gmail.importer.local.thunderbird;
 
+import static com.google.common.truth.Truth.assertWithMessage;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
+
 import com.google.common.base.Charsets;
 import com.google.common.base.VerifyException;
+import java.io.OutputStream;
+import javax.mail.Folder;
+import javax.mail.Message;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,16 +33,6 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import to.lean.tools.gmail.importer.local.JavaxMailMessage;
-
-import javax.mail.Folder;
-import javax.mail.Message;
-import java.io.OutputStream;
-
-import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth.assertWithMessage;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
 
 @RunWith(JUnit4.class)
 public class ThunderbirdLocalMessageTest {
@@ -49,34 +47,31 @@ public class ThunderbirdLocalMessageTest {
 
     localMailMessage =
         new ThunderbirdLocalMessage(
-            new JavaxMailMessage(message),
-            s -> "*" + s + "*",
-            new XMozillaStatusParser());
+            new JavaxMailMessage(message), s -> "*" + s + "*", new XMozillaStatusParser());
 
     when(message.getFolder()).thenReturn(folder);
     when(folder.getFullName()).thenReturn("folder");
 
-    doAnswer(invocation -> {
-      OutputStream outputStream = (OutputStream) invocation.getArguments()[0];
-      outputStream.write("BODY".getBytes(Charsets.UTF_8));
-      return null;
-    })
-        .when(message).writeTo(any(OutputStream.class));
+    doAnswer(
+            invocation -> {
+              OutputStream outputStream = (OutputStream) invocation.getArguments()[0];
+              outputStream.write("BODY".getBytes(Charsets.UTF_8));
+              return null;
+            })
+        .when(message)
+        .writeTo(any(OutputStream.class));
   }
 
   @Test
   public void testGetMessageId_normal() throws Exception {
-    when(message.getHeader("Message-ID"))
-        .thenReturn(new String[]{"<XYZ@pdq>"});
+    when(message.getHeader("Message-ID")).thenReturn(new String[] {"<XYZ@pdq>"});
 
-    assertThat(localMailMessage.getMessageId()).named("messageId")
-        .isEqualTo("<XYZ@pdq>");
+    assertWithMessage("messageId").that(localMailMessage.getMessageId()).isEqualTo("<XYZ@pdq>");
   }
 
   @Test
   public void testGetMessageId_missing() throws Exception {
-    when(message.getHeader("Message-ID"))
-        .thenReturn(new String[0]);
+    when(message.getHeader("Message-ID")).thenReturn(new String[0]);
 
     try {
       localMailMessage.getMessageId();
@@ -88,8 +83,7 @@ public class ThunderbirdLocalMessageTest {
 
   @Test
   public void testGetMessageId_multiple() throws Exception {
-    when(message.getHeader("Message-ID"))
-        .thenReturn(new String[]{"<XYZ@pdq>", "<ABC@123>"});
+    when(message.getHeader("Message-ID")).thenReturn(new String[] {"<XYZ@pdq>", "<ABC@123>"});
 
     try {
       localMailMessage.getMessageId();
@@ -101,17 +95,14 @@ public class ThunderbirdLocalMessageTest {
 
   @Test
   public void testGetFromHeader_normal() throws Exception {
-    when(message.getHeader("From"))
-        .thenReturn(new String[]{"<XYZ@pdq>"});
+    when(message.getHeader("From")).thenReturn(new String[] {"<XYZ@pdq>"});
 
-    assertThat(localMailMessage.getFromHeader()).named("from header")
-        .isEqualTo("<XYZ@pdq>");
+    assertWithMessage("from header").that(localMailMessage.getFromHeader()).isEqualTo("<XYZ@pdq>");
   }
 
   @Test
   public void testGetFromHeader_missing() throws Exception {
-    when(message.getHeader("From"))
-        .thenReturn(new String[0]);
+    when(message.getHeader("From")).thenReturn(new String[0]);
 
     try {
       localMailMessage.getFromHeader();
@@ -123,8 +114,7 @@ public class ThunderbirdLocalMessageTest {
 
   @Test
   public void testGetFromHeader_multiple() throws Exception {
-    when(message.getHeader("From"))
-        .thenReturn(new String[]{"<XYZ@pdq>", "<ABC@123>"});
+    when(message.getHeader("From")).thenReturn(new String[] {"<XYZ@pdq>", "<ABC@123>"});
 
     try {
       localMailMessage.getFromHeader();
@@ -136,46 +126,37 @@ public class ThunderbirdLocalMessageTest {
 
   @Test
   public void testGetFolders() throws Exception {
-    assertThat(localMailMessage.getFolders()).named("folders")
-        .containsExactly("*folder*");
+    assertWithMessage("folders").that(localMailMessage.getFolders()).containsExactly("*folder*");
   }
 
   @Test
   public void testGetRawContent() throws Exception {
-    assertThat(localMailMessage.getRawContent()).named("raw content")
+    assertWithMessage("raw content")
+        .that(localMailMessage.getRawContent())
         .isEqualTo("BODY".getBytes(Charsets.UTF_8));
   }
 
   @Test
   public void testIsUnread_true() throws Exception {
-    when(message.getHeader("X-Mozilla-Status"))
-        .thenReturn(new String[] { "00000000" });
-    assertThat(localMailMessage.isUnread()).named("is unread")
-        .isEqualTo(true);
+    when(message.getHeader("X-Mozilla-Status")).thenReturn(new String[] {"00000000"});
+    assertWithMessage("is unread").that(localMailMessage.isUnread()).isEqualTo(true);
   }
 
   @Test
   public void testIsUnread_false() throws Exception {
-    when(message.getHeader("X-Mozilla-Status"))
-        .thenReturn(new String[] { "00000001" });
-    assertThat(localMailMessage.isUnread()).named("is unread")
-        .isEqualTo(false);
+    when(message.getHeader("X-Mozilla-Status")).thenReturn(new String[] {"00000001"});
+    assertWithMessage("is unread").that(localMailMessage.isUnread()).isEqualTo(false);
   }
 
   @Test
   public void testIsStarred_true() throws Exception {
-    when(message.getHeader("X-Mozilla-Status"))
-        .thenReturn(new String[] { "00000004" });
-    assertThat(localMailMessage.isStarred()).named("is starred")
-        .isEqualTo(true);
+    when(message.getHeader("X-Mozilla-Status")).thenReturn(new String[] {"00000004"});
+    assertWithMessage("is starred").that(localMailMessage.isStarred()).isEqualTo(true);
   }
 
   @Test
   public void testIsStarred_false() throws Exception {
-    when(message.getHeader("X-Mozilla-Status"))
-        .thenReturn(new String[] { "00000000" });
-    assertThat(localMailMessage.isStarred()).named("is starred")
-        .isEqualTo(false);
+    when(message.getHeader("X-Mozilla-Status")).thenReturn(new String[] {"00000000"});
+    assertWithMessage("is starred").that(localMailMessage.isStarred()).isEqualTo(false);
   }
-
 }

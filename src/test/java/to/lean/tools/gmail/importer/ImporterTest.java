@@ -16,7 +16,16 @@
 
 package to.lean.tools.gmail.importer;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.google.api.client.util.Lists;
+import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,16 +41,6 @@ import to.lean.tools.gmail.importer.gmail.GmailSyncer;
 import to.lean.tools.gmail.importer.local.LocalMessage;
 import to.lean.tools.gmail.importer.local.LocalStorage;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Logger;
-
-import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @RunWith(JUnit4.class)
 public class ImporterTest {
 
@@ -52,10 +51,8 @@ public class ImporterTest {
 
   @Captor private ArgumentCaptor<List<LocalMessage>> messageListCaptor;
 
-  private CommandLineArguments commandLineArguments =
-      new CommandLineArguments();
-  private MailProvider<LocalStorage> localStorageProvider =
-      () -> localStorage;
+  private CommandLineArguments commandLineArguments = new CommandLineArguments();
+  private MailProvider<LocalStorage> localStorageProvider = () -> localStorage;
 
   private Importer importer;
 
@@ -65,10 +62,9 @@ public class ImporterTest {
 
     when(localStorage.iterator()).thenReturn(localStorageIterator);
 
-    importer = new Importer(Logger.getLogger("test"),
-        localStorageProvider,
-        gmailSyncer,
-        commandLineArguments);
+    importer =
+        new Importer(
+            Logger.getLogger("test"), localStorageProvider, gmailSyncer, commandLineArguments);
   }
 
   @Test
@@ -84,9 +80,7 @@ public class ImporterTest {
     verify(gmailSyncer).init();
     verify(gmailSyncer).sync(messageListCaptor.capture());
 
-    assertThat(messageListCaptor.getAllValues().stream()
-        .map(List::size)
-        .reduce(0, (a, b) -> a + b))
+    assertThat(messageListCaptor.getAllValues().stream().map(List::size).reduce(0, (a, b) -> a + b))
         .isEqualTo(50);
   }
 
@@ -98,23 +92,21 @@ public class ImporterTest {
     }
 
     when(localStorage.iterator())
-        .thenAnswer(new Answer<Iterator<LocalMessage>> () {
-          @Override
-          public Iterator<LocalMessage> answer(InvocationOnMock invocation)
-              throws Throwable {
-            Iterator<LocalMessage> iterator = localMessageList.iterator();
-            return iterator;
-          }
-        });
+        .thenAnswer(
+            new Answer<Iterator<LocalMessage>>() {
+              @Override
+              public Iterator<LocalMessage> answer(InvocationOnMock invocation) throws Throwable {
+                Iterator<LocalMessage> iterator = localMessageList.iterator();
+                return iterator;
+              }
+            });
 
     importer.importMail();
 
     verify(gmailSyncer).init();
     verify(gmailSyncer).sync(messageListCaptor.capture());
 
-    assertThat(messageListCaptor.getAllValues().stream()
-        .map(List::size)
-        .reduce(0, (a, b) -> a + b))
+    assertThat(messageListCaptor.getAllValues().stream().map(List::size).reduce(0, (a, b) -> a + b))
         .isEqualTo(100);
   }
 }

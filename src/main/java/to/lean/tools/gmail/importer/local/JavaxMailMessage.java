@@ -16,6 +16,11 @@
 
 package to.lean.tools.gmail.importer.local;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.Enumeration;
 import javax.activation.DataHandler;
 import javax.mail.Address;
 import javax.mail.Flags;
@@ -24,15 +29,8 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.search.SearchTerm;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Date;
-import java.util.Enumeration;
 
-/**
- * Modernized wrapper for Message that throws {@code RuntimeMessagingException}.
- */
+/** Modernized wrapper for Message that throws {@code RuntimeMessagingException}. */
 public class JavaxMailMessage extends Message {
   private final Message delegate;
 
@@ -77,8 +75,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public Address[] getRecipients(RecipientType type)
-      throws RuntimeMessagingException {
+  public Address[] getRecipients(RecipientType type) throws RuntimeMessagingException {
     try {
       return delegate.getRecipients(type);
     } catch (MessagingException e) {
@@ -106,8 +103,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public void setRecipient(RecipientType type, Address address)
-      throws RuntimeMessagingException {
+  public void setRecipient(RecipientType type, Address address) throws RuntimeMessagingException {
     try {
       delegate.setRecipient(type, address);
     } catch (MessagingException e) {
@@ -126,8 +122,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public void addRecipient(RecipientType type, Address address)
-      throws RuntimeMessagingException {
+  public void addRecipient(RecipientType type, Address address) throws RuntimeMessagingException {
     try {
       delegate.addRecipient(type, address);
     } catch (MessagingException e) {
@@ -217,8 +212,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public void setFlags(Flags flag, boolean set)
-      throws RuntimeMessagingException {
+  public void setFlags(Flags flag, boolean set) throws RuntimeMessagingException {
     try {
       delegate.setFlags(flag, set);
     } catch (MessagingException e) {
@@ -227,8 +221,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public void setFlag(Flags.Flag flag, boolean set)
-      throws RuntimeMessagingException {
+  public void setFlag(Flags.Flag flag, boolean set) throws RuntimeMessagingException {
     try {
       delegate.setFlag(flag, set);
     } catch (MessagingException e) {
@@ -252,8 +245,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public JavaxMailMessage reply(boolean replyToAll)
-      throws RuntimeMessagingException {
+  public JavaxMailMessage reply(boolean replyToAll) throws RuntimeMessagingException {
     try {
       return new JavaxMailMessage(delegate.reply(replyToAll));
     } catch (MessagingException e) {
@@ -325,8 +317,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public void setDisposition(String disposition)
-      throws RuntimeMessagingException {
+  public void setDisposition(String disposition) throws RuntimeMessagingException {
     try {
       delegate.setDisposition(disposition);
     } catch (MessagingException e) {
@@ -344,8 +335,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public void setDescription(String description)
-      throws RuntimeMessagingException {
+  public void setDescription(String description) throws RuntimeMessagingException {
     try {
       delegate.setDescription(description);
     } catch (MessagingException e) {
@@ -372,8 +362,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public InputStream getInputStream()
-      throws IOException, RuntimeMessagingException {
+  public InputStream getInputStream() throws IOException, RuntimeMessagingException {
     try {
       return delegate.getInputStream();
     } catch (MessagingException e) {
@@ -409,8 +398,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public void setContent(Object obj, String type)
-      throws RuntimeMessagingException {
+  public void setContent(Object obj, String type) throws RuntimeMessagingException {
     try {
       delegate.setContent(obj, type);
     } catch (MessagingException e) {
@@ -437,8 +425,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public void writeTo(OutputStream os)
-      throws IOException, RuntimeMessagingException {
+  public void writeTo(OutputStream os) throws IOException, RuntimeMessagingException {
     try {
       delegate.writeTo(os);
     } catch (MessagingException e) {
@@ -447,8 +434,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public String[] getHeader(String header_name)
-      throws RuntimeMessagingException {
+  public String[] getHeader(String header_name) throws RuntimeMessagingException {
     try {
       return delegate.getHeader(header_name);
     } catch (MessagingException e) {
@@ -457,8 +443,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public void setHeader(String header_name, String header_value)
-      throws RuntimeMessagingException {
+  public void setHeader(String header_name, String header_value) throws RuntimeMessagingException {
     try {
       delegate.setHeader(header_name, header_value);
     } catch (MessagingException e) {
@@ -467,8 +452,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public void addHeader(String header_name, String header_value)
-      throws RuntimeMessagingException {
+  public void addHeader(String header_name, String header_value) throws RuntimeMessagingException {
     try {
       delegate.addHeader(header_name, header_value);
     } catch (MessagingException e) {
@@ -477,8 +461,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public void removeHeader(String header_name)
-      throws RuntimeMessagingException {
+  public void removeHeader(String header_name) throws RuntimeMessagingException {
     try {
       delegate.removeHeader(header_name);
     } catch (MessagingException e) {
@@ -496,8 +479,7 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public Enumeration getMatchingHeaders(String[] header_names)
-      throws RuntimeMessagingException {
+  public Enumeration getMatchingHeaders(String[] header_names) throws RuntimeMessagingException {
     try {
       return delegate.getMatchingHeaders(header_names);
     } catch (MessagingException e) {
@@ -506,13 +488,11 @@ public class JavaxMailMessage extends Message {
   }
 
   @Override
-  public Enumeration getNonMatchingHeaders(String[] header_names)
-      throws RuntimeMessagingException {
+  public Enumeration getNonMatchingHeaders(String[] header_names) throws RuntimeMessagingException {
     try {
       return delegate.getNonMatchingHeaders(header_names);
     } catch (MessagingException e) {
       throw new RuntimeMessagingException(e);
     }
   }
-
 }

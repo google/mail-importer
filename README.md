@@ -7,18 +7,18 @@ app on your phone and still have access to everything?
 
 If so, maybe _Mail Importer for Gmail_ is for you!
 
-If you are trying to bulk import mbox format files to Google Workspace,
-you should probably look at
+If you are trying to bulk import mbox format files to Google Workspace, you
+should probably look at
 [import-mailbox-to-gmail](https://github.com/google/import-mailbox-to-gmail).
 
 **DISCLAIMER**: This is not an official Google product.
 
 ## What does it do?
 
-_Mail Importer for Gmail_ will upload the contents of a Thunderbird mail
-archive to Gmail and do its best to preserve the read state, flagged state, and
-folders of the messages. As messages are uploaded verbatim, Gmail will have an
-exact copy, including all attachments and headers.
+_Mail Importer for Gmail_ will upload the contents of a Thunderbird mail archive
+to Gmail and do its best to preserve the read state, flagged state, and folders
+of the messages. As messages are uploaded verbatim, Gmail will have an exact
+copy, including all attachments and headers.
 
 _Mail Importer_ also makes sure to only upload messages that aren't already in
 Gmail. This makes it easy to re-run the import multiple times if something goes
@@ -26,9 +26,8 @@ wrong.
 
 ## How can I run it?
 
-Currently, _Mail Importer for Gmail_ is in early development. It is __not__
-user friendly in any way. If you are not a developer, you probably want to
-stay away.
+Currently, _Mail Importer for Gmail_ is in early development. It is **not** user
+friendly in any way. If you are not a developer, you probably want to stay away.
 
 ### Getting a Client Secret
 

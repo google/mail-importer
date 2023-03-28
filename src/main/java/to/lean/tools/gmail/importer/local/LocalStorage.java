@@ -17,9 +17,7 @@
 package to.lean.tools.gmail.importer.local;
 
 /**
- * Defines the interface for local storage. The only thing the importer really
- * cares about is getting messages from local storage so that it can ensure
- * that they exist in remote storage.
+ * Defines the interface for local storage. The only thing the importer really cares about is
+ * getting messages from local storage so that it can ensure that they exist in remote storage.
  */
-public interface LocalStorage extends Iterable<LocalMessage> {
-}
+public interface LocalStorage extends Iterable<LocalMessage> {}

@@ -20,7 +20,6 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.auth.oauth2.GoogleOAuthConstants;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -34,28 +33,24 @@ import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharSource;
 import com.google.common.io.Resources;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import javax.inject.Inject;
+import javax.inject.Provider;
 
-/**
- * Encapsulates the authorization and authentication flow.
- */
+/** Encapsulates the authorization and authentication flow. */
 class Authorizer implements Provider<Credential> {
+  private static final String REDIRECT_URI = "http://localhost:8080/oauth2callback";
+
   private HttpTransport httpTransport;
   private JsonFactory jsonFactory;
   private User user;
 
   @Inject
-  public Authorizer(
-      User user,
-      HttpTransport httpTransport,
-      JsonFactory jsonFactory) {
+  public Authorizer(User user, HttpTransport httpTransport, JsonFactory jsonFactory) {
     this.httpTransport = httpTransport;
     this.jsonFactory = jsonFactory;
     this.user = user;
@@ -70,12 +65,10 @@ class Authorizer implements Provider<Credential> {
       // Allow user to authorize via url.
       GoogleAuthorizationCodeFlow flow =
           new GoogleAuthorizationCodeFlow.Builder(
-              httpTransport,
-              jsonFactory,
-              clientSecrets,
-              ImmutableList.of(
-                  GmailScopes.GMAIL_MODIFY,
-                  GmailScopes.GMAIL_READONLY))
+                  httpTransport,
+                  jsonFactory,
+                  clientSecrets,
+                  ImmutableList.of(GmailScopes.GMAIL_MODIFY, GmailScopes.GMAIL_READONLY))
               .setCredentialDataStore(dataStore)
               .setAccessType("offline")
               .setApprovalPrompt("auto")
@@ -86,35 +79,32 @@ class Authorizer implements Provider<Credential> {
 
       // If we don't, prompt them to get one.
       if (credential == null) {
-        String url = flow.newAuthorizationUrl()
-            .setRedirectUri(GoogleOAuthConstants.OOB_REDIRECT_URI)
-            .build();
-        System.out.println("Please open the following URL in your browser then "
-            + "type the authorization code:\n" + url);
+
+        String url = flow.newAuthorizationUrl().setRedirectUri(REDIRECT_URI).build();
+        System.out.println(
+            "Please open the following URL in your browser then "
+                + "type the authorization code:\n"
+                + url);
 
         // Read code entered by user.
         System.out.print("Code: ");
         System.out.flush();
-        BufferedReader br = new BufferedReader(
-            new InputStreamReader(System.in));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String code = br.readLine();
 
         // Generate Credential using retrieved code.
-        GoogleTokenResponse response = flow.newTokenRequest(code)
-            .setRedirectUri(GoogleOAuthConstants.OOB_REDIRECT_URI)
-            .execute();
+        GoogleTokenResponse response =
+            flow.newTokenRequest(code).setRedirectUri(REDIRECT_URI).execute();
 
-        credential =
-            flow.createAndStoreCredential(response, user.getEmailAddress());
+        credential = flow.createAndStoreCredential(response, user.getEmailAddress());
       }
 
-      Gmail gmail = new Gmail.Builder(httpTransport, jsonFactory, credential)
-          .setApplicationName(GmailServiceModule.APP_NAME)
-          .build();
+      Gmail gmail =
+          new Gmail.Builder(httpTransport, jsonFactory, credential)
+              .setApplicationName(GmailServiceModule.APP_NAME)
+              .build();
 
-      Profile profile = gmail.users()
-          .getProfile(user.getEmailAddress())
-          .execute();
+      Profile profile = gmail.users().getProfile(user.getEmailAddress()).execute();
 
       System.out.println(profile.toPrettyString());
       return credential;
@@ -123,27 +113,23 @@ class Authorizer implements Provider<Credential> {
     }
   }
 
-  private GoogleClientSecrets loadGoogleClientSecrets(JsonFactory jsonFactory)
-      throws IOException {
+  private GoogleClientSecrets loadGoogleClientSecrets(JsonFactory jsonFactory) throws IOException {
     URL url = Resources.getResource("client_secret.json");
-    CharSource inputSupplier =
-        Resources.asCharSource(url, Charsets.UTF_8);
+    CharSource inputSupplier = Resources.asCharSource(url, Charsets.UTF_8);
     return GoogleClientSecrets.load(jsonFactory, inputSupplier.openStream());
   }
 
-  private DataStore<StoredCredential> getStoredCredentialDataStore()
-      throws IOException {
+  private DataStore<StoredCredential> getStoredCredentialDataStore() throws IOException {
     File userHomeDir = getUserHomeDir();
     File mailimporter = new File(userHomeDir, ".mailimporter");
-    FileDataStoreFactory dataStoreFactory =
-        new FileDataStoreFactory(mailimporter);
+    FileDataStoreFactory dataStoreFactory = new FileDataStoreFactory(mailimporter);
     return dataStoreFactory.getDataStore("credentials");
   }
 
   private File getUserHomeDir() {
     File userHome = new File(System.getProperty("user.home"));
-    Verify.verify(userHome.exists() && userHome.canRead(),
-        "Can not find user's home: %s", userHome);
+    Verify.verify(
+        userHome.exists() && userHome.canRead(), "Can not find user's home: %s", userHome);
     return userHome;
   }
 }
